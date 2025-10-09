@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp2
 {
-    internal static class Program
+    static class Program
     {
-        /// <summary>
-        /// Ponto de entrada principal para o aplicativo.
-        /// </summary>
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            // Pega o nome de usuário logado no Windows
+            string usuarioWindows = Environment.UserName;
+
+            // Abre a tela principal, já passando o nome do usuário.
+            Application.Run(new Form1(usuarioWindows));
         }
     }
 }

@@ -3,14 +3,14 @@
     partial class Form1
     {
         /// <summary>
-        /// Required designer variable.
+        /// Variável de designer necessária.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Limpar os recursos que estão sendo usados.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,11 +20,11 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Código gerado pelo Windows Form Designer
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Método necessário para suporte ao Designer - não modifique 
+        /// o conteúdo deste método com o editor de código.
         /// </summary>
         private void InitializeComponent()
         {
@@ -32,32 +32,37 @@
             this.btnBuscaAvancada = new System.Windows.Forms.Button();
             this.btnRelatorios = new System.Windows.Forms.Button();
             this.btnFiltrar = new System.Windows.Forms.Button();
+            this.btnExcluir = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnNova = new System.Windows.Forms.Button();
-            this.btnOrdensServico = new System.Windows.Forms.Button();
+            this.btnInstrumentos = new System.Windows.Forms.Button();
             this.btnProcurar = new System.Windows.Forms.Button();
             this.btnConfiguracoes = new System.Windows.Forms.Button();
             this.panelSuperior = new System.Windows.Forms.Panel();
             this.lblTitulo = new System.Windows.Forms.Label();
-            this.dgvOrdensServico = new System.Windows.Forms.DataGridView();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OS = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Abertura = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Fechamento = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Prazo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OM = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Artigo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TipoArtigo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Cliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Descricao = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.radTodas = new System.Windows.Forms.RadioButton();
-            this.radAbertas = new System.Windows.Forms.RadioButton();
-            this.radEncerradas = new System.Windows.Forms.RadioButton();
             this.panelPrincipal = new System.Windows.Forms.Panel();
+            this.lblBusca = new System.Windows.Forms.Label();
+            this.txtBusca = new System.Windows.Forms.TextBox();
+            this.dgvDados = new System.Windows.Forms.DataGridView();
+            this.colInstrumento = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colModelo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIdentifSOD = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIdentifOficina = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCertificado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDataCalibracao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDataVencimento = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSituacao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colExecutante = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colInstalada = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubLocalizacao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFoto = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelEsquerdo.SuspendLayout();
             this.panelSuperior.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvOrdensServico)).BeginInit();
             this.panelPrincipal.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDados)).BeginInit();
             this.SuspendLayout();
             // 
             // panelEsquerdo
@@ -66,9 +71,10 @@
             this.panelEsquerdo.Controls.Add(this.btnBuscaAvancada);
             this.panelEsquerdo.Controls.Add(this.btnRelatorios);
             this.panelEsquerdo.Controls.Add(this.btnFiltrar);
+            this.panelEsquerdo.Controls.Add(this.btnExcluir);
             this.panelEsquerdo.Controls.Add(this.btnEditar);
             this.panelEsquerdo.Controls.Add(this.btnNova);
-            this.panelEsquerdo.Controls.Add(this.btnOrdensServico);
+            this.panelEsquerdo.Controls.Add(this.btnInstrumentos);
             this.panelEsquerdo.Controls.Add(this.btnProcurar);
             this.panelEsquerdo.Controls.Add(this.btnConfiguracoes);
             this.panelEsquerdo.Dock = System.Windows.Forms.DockStyle.Left;
@@ -85,11 +91,11 @@
             this.btnBuscaAvancada.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBuscaAvancada.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnBuscaAvancada.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnBuscaAvancada.Location = new System.Drawing.Point(0, 280);
+            this.btnBuscaAvancada.Location = new System.Drawing.Point(0, 320);
             this.btnBuscaAvancada.Name = "btnBuscaAvancada";
             this.btnBuscaAvancada.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnBuscaAvancada.Size = new System.Drawing.Size(200, 40);
-            this.btnBuscaAvancada.TabIndex = 7;
+            this.btnBuscaAvancada.TabIndex = 8;
             this.btnBuscaAvancada.Text = "Busca Avançada";
             this.btnBuscaAvancada.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnBuscaAvancada.UseVisualStyleBackColor = false;
@@ -102,11 +108,11 @@
             this.btnRelatorios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRelatorios.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnRelatorios.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnRelatorios.Location = new System.Drawing.Point(0, 240);
+            this.btnRelatorios.Location = new System.Drawing.Point(0, 280);
             this.btnRelatorios.Name = "btnRelatorios";
             this.btnRelatorios.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnRelatorios.Size = new System.Drawing.Size(200, 40);
-            this.btnRelatorios.TabIndex = 6;
+            this.btnRelatorios.TabIndex = 7;
             this.btnRelatorios.Text = "Relatórios";
             this.btnRelatorios.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnRelatorios.UseVisualStyleBackColor = false;
@@ -119,19 +125,39 @@
             this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnFiltrar.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnFiltrar.Location = new System.Drawing.Point(0, 200);
+            this.btnFiltrar.Location = new System.Drawing.Point(0, 240);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnFiltrar.Size = new System.Drawing.Size(200, 40);
-            this.btnFiltrar.TabIndex = 5;
+            this.btnFiltrar.TabIndex = 6;
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.UseVisualStyleBackColor = false;
+            // 
+            // btnExcluir
+            // 
+            this.btnExcluir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.btnExcluir.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnExcluir.Enabled = false;
+            this.btnExcluir.FlatAppearance.BorderSize = 0;
+            this.btnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExcluir.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnExcluir.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnExcluir.Location = new System.Drawing.Point(0, 200);
+            this.btnExcluir.Name = "btnExcluir";
+            this.btnExcluir.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnExcluir.Size = new System.Drawing.Size(200, 40);
+            this.btnExcluir.TabIndex = 5;
+            this.btnExcluir.Text = "Excluir";
+            this.btnExcluir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExcluir.UseVisualStyleBackColor = false;
+            this.btnExcluir.Click += new System.EventHandler(this.btnExcluir_Click);
             // 
             // btnEditar
             // 
             this.btnEditar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.btnEditar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnEditar.Enabled = false;
             this.btnEditar.FlatAppearance.BorderSize = 0;
             this.btnEditar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditar.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -144,6 +170,7 @@
             this.btnEditar.Text = "Editar";
             this.btnEditar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEditar.UseVisualStyleBackColor = false;
+            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
             // 
             // btnNova
             // 
@@ -161,23 +188,24 @@
             this.btnNova.Text = "Nova";
             this.btnNova.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNova.UseVisualStyleBackColor = false;
+            this.btnNova.Click += new System.EventHandler(this.btnNova_Click);
             // 
-            // btnOrdensServico
+            // btnInstrumentos
             // 
-            this.btnOrdensServico.BackColor = System.Drawing.Color.DodgerBlue;
-            this.btnOrdensServico.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnOrdensServico.FlatAppearance.BorderSize = 0;
-            this.btnOrdensServico.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOrdensServico.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnOrdensServico.ForeColor = System.Drawing.Color.White;
-            this.btnOrdensServico.Location = new System.Drawing.Point(0, 80);
-            this.btnOrdensServico.Name = "btnOrdensServico";
-            this.btnOrdensServico.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnOrdensServico.Size = new System.Drawing.Size(200, 40);
-            this.btnOrdensServico.TabIndex = 2;
-            this.btnOrdensServico.Text = "Ordens de Serviço";
-            this.btnOrdensServico.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnOrdensServico.UseVisualStyleBackColor = false;
+            this.btnInstrumentos.BackColor = System.Drawing.Color.DodgerBlue;
+            this.btnInstrumentos.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnInstrumentos.FlatAppearance.BorderSize = 0;
+            this.btnInstrumentos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInstrumentos.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnInstrumentos.ForeColor = System.Drawing.Color.White;
+            this.btnInstrumentos.Location = new System.Drawing.Point(0, 80);
+            this.btnInstrumentos.Name = "btnInstrumentos";
+            this.btnInstrumentos.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnInstrumentos.Size = new System.Drawing.Size(200, 40);
+            this.btnInstrumentos.TabIndex = 2;
+            this.btnInstrumentos.Text = "Instrumentos";
+            this.btnInstrumentos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnInstrumentos.UseVisualStyleBackColor = false;
             // 
             // btnProcurar
             // 
@@ -195,6 +223,7 @@
             this.btnProcurar.Text = "Procurar";
             this.btnProcurar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnProcurar.UseVisualStyleBackColor = false;
+            this.btnProcurar.Click += new System.EventHandler(this.btnProcurar_Click);
             // 
             // btnConfiguracoes
             // 
@@ -220,188 +249,230 @@
             this.panelSuperior.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSuperior.Location = new System.Drawing.Point(0, 0);
             this.panelSuperior.Name = "panelSuperior";
-            this.panelSuperior.Size = new System.Drawing.Size(1184, 40);
+            this.panelSuperior.Size = new System.Drawing.Size(1264, 40);
             this.panelSuperior.TabIndex = 1;
             // 
             // lblTitulo
             // 
             this.lblTitulo.AutoSize = true;
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.lblTitulo.ForeColor = System.Drawing.Color.White;
-            this.lblTitulo.Location = new System.Drawing.Point(12, 13);
+            this.lblTitulo.Location = new System.Drawing.Point(12, 11);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(227, 13);
+            this.lblTitulo.Size = new System.Drawing.Size(287, 17);
             this.lblTitulo.TabIndex = 0;
-            this.lblTitulo.Text = "I2MS - INDEPENDENT MAINTENANCE SYSTEM";
-            // 
-            // dgvOrdensServico
-            // 
-            this.dgvOrdensServico.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvOrdensServico.BackgroundColor = System.Drawing.Color.White;
-            this.dgvOrdensServico.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvOrdensServico.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Status,
-            this.OS,
-            this.Abertura,
-            this.Fechamento,
-            this.Prazo,
-            this.OM,
-            this.Artigo,
-            this.TipoArtigo,
-            this.Cliente,
-            this.Descricao});
-            this.dgvOrdensServico.Location = new System.Drawing.Point(10, 50);
-            this.dgvOrdensServico.Name = "dgvOrdensServico";
-            this.dgvOrdensServico.RowHeadersVisible = false;
-            this.dgvOrdensServico.Size = new System.Drawing.Size(952, 459);
-            this.dgvOrdensServico.TabIndex = 2;
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "STATUS";
-            this.Status.Name = "Status";
-            // 
-            // OS
-            // 
-            this.OS.HeaderText = "OS";
-            this.OS.Name = "OS";
-            // 
-            // Abertura
-            // 
-            this.Abertura.HeaderText = "ABERTURA";
-            this.Abertura.Name = "Abertura";
-            // 
-            // Fechamento
-            // 
-            this.Fechamento.HeaderText = "FECHAMENTO";
-            this.Fechamento.Name = "Fechamento";
-            // 
-            // Prazo
-            // 
-            this.Prazo.HeaderText = "PRAZO";
-            this.Prazo.Name = "Prazo";
-            // 
-            // OM
-            // 
-            this.OM.HeaderText = "OM";
-            this.OM.Name = "OM";
-            // 
-            // Artigo
-            // 
-            this.Artigo.HeaderText = "ARTIGO";
-            this.Artigo.Name = "Artigo";
-            // 
-            // TipoArtigo
-            // 
-            this.TipoArtigo.HeaderText = "TIPO ARTIGO";
-            this.TipoArtigo.Name = "TipoArtigo";
-            // 
-            // Cliente
-            // 
-            this.Cliente.HeaderText = "CLIENTE";
-            this.Cliente.Name = "Cliente";
-            // 
-            // Descricao
-            // 
-            this.Descricao.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Descricao.HeaderText = "DESCRICAO";
-            this.Descricao.Name = "Descricao";
-            // 
-            // radTodas
-            // 
-            this.radTodas.AutoSize = true;
-            this.radTodas.Checked = true;
-            this.radTodas.Location = new System.Drawing.Point(20, 15);
-            this.radTodas.Name = "radTodas";
-            this.radTodas.Size = new System.Drawing.Size(63, 17);
-            this.radTodas.TabIndex = 3;
-            this.radTodas.TabStop = true;
-            this.radTodas.Text = "TODAS";
-            this.radTodas.UseVisualStyleBackColor = true;
-            // 
-            // radAbertas
-            // 
-            this.radAbertas.AutoSize = true;
-            this.radAbertas.Location = new System.Drawing.Point(100, 15);
-            this.radAbertas.Name = "radAbertas";
-            this.radAbertas.Size = new System.Drawing.Size(72, 17);
-            this.radAbertas.TabIndex = 4;
-            this.radAbertas.Text = "ABERTAS";
-            this.radAbertas.UseVisualStyleBackColor = true;
-            // 
-            // radEncerradas
-            // 
-            this.radEncerradas.AutoSize = true;
-            this.radEncerradas.Location = new System.Drawing.Point(190, 15);
-            this.radEncerradas.Name = "radEncerradas";
-            this.radEncerradas.Size = new System.Drawing.Size(99, 17);
-            this.radEncerradas.TabIndex = 5;
-            this.radEncerradas.Text = "ENCERRADAS";
-            this.radEncerradas.UseVisualStyleBackColor = true;
+            this.lblTitulo.Text = "CONTROLE DE CALIBRAÇÃO DE INSTRUMENTOS";
             // 
             // panelPrincipal
             // 
             this.panelPrincipal.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panelPrincipal.Controls.Add(this.radEncerradas);
-            this.panelPrincipal.Controls.Add(this.radAbertas);
-            this.panelPrincipal.Controls.Add(this.radTodas);
-            this.panelPrincipal.Controls.Add(this.dgvOrdensServico);
+            this.panelPrincipal.Controls.Add(this.lblBusca);
+            this.panelPrincipal.Controls.Add(this.txtBusca);
+            this.panelPrincipal.Controls.Add(this.dgvDados);
             this.panelPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPrincipal.Location = new System.Drawing.Point(200, 40);
             this.panelPrincipal.Name = "panelPrincipal";
-            this.panelPrincipal.Size = new System.Drawing.Size(984, 521);
-            this.panelPrincipal.TabIndex = 6;
+            this.panelPrincipal.Size = new System.Drawing.Size(1064, 521);
+            this.panelPrincipal.TabIndex = 2;
+            // 
+            // lblBusca
+            // 
+            this.lblBusca.AutoSize = true;
+            this.lblBusca.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblBusca.Location = new System.Drawing.Point(10, 15);
+            this.lblBusca.Name = "lblBusca";
+            this.lblBusca.Size = new System.Drawing.Size(58, 15);
+            this.lblBusca.TabIndex = 2;
+            this.lblBusca.Text = "Procurar:";
+            this.lblBusca.Visible = false;
+            // 
+            // txtBusca
+            // 
+            this.txtBusca.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtBusca.Location = new System.Drawing.Point(75, 12);
+            this.txtBusca.Name = "txtBusca";
+            this.txtBusca.Size = new System.Drawing.Size(300, 23);
+            this.txtBusca.TabIndex = 1;
+            this.txtBusca.Visible = false;
+            this.txtBusca.TextChanged += new System.EventHandler(this.txtBusca_TextChanged);
+            // 
+            // dgvDados
+            // 
+            this.dgvDados.AllowUserToAddRows = false;
+            this.dgvDados.AllowUserToDeleteRows = false;
+            this.dgvDados.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvDados.BackgroundColor = System.Drawing.Color.White;
+            this.dgvDados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.colInstrumento, this.colModelo, this.colPN, this.colSN, this.colIdentifSOD, this.colIdentifOficina, this.colCertificado, this.colDataCalibracao, this.colDataVencimento, this.colSituacao, this.colExecutante, this.colInstalada, this.colLocal, this.colSubLocalizacao, this.colFoto });
+            this.dgvDados.Location = new System.Drawing.Point(10, 45);
+            this.dgvDados.MultiSelect = false;
+            this.dgvDados.Name = "dgvDados";
+            this.dgvDados.ReadOnly = true;
+            this.dgvDados.RowHeadersVisible = false;
+            this.dgvDados.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvDados.Size = new System.Drawing.Size(1042, 464);
+            this.dgvDados.TabIndex = 0;
+            this.dgvDados.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDados_CellDoubleClick);
+            this.dgvDados.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvDados_CellFormatting);
+            // 
+            // colInstrumento
+            // 
+            this.colInstrumento.HeaderText = "INSTRUMENTO / FERRAMENTA";
+            this.colInstrumento.Name = "colInstrumento";
+            this.colInstrumento.ReadOnly = true;
+            this.colInstrumento.Width = 180;
+            // 
+            // colModelo
+            // 
+            this.colModelo.HeaderText = "MODELO";
+            this.colModelo.Name = "colModelo";
+            this.colModelo.ReadOnly = true;
+            this.colModelo.Width = 80;
+            // 
+            // colPN
+            // 
+            this.colPN.HeaderText = "P/N";
+            this.colPN.Name = "colPN";
+            this.colPN.ReadOnly = true;
+            this.colPN.Width = 80;
+            // 
+            // colSN
+            // 
+            this.colSN.HeaderText = "S/N";
+            this.colSN.Name = "colSN";
+            this.colSN.ReadOnly = true;
+            this.colSN.Width = 80;
+            // 
+            // colIdentifSOD
+            // 
+            this.colIdentifSOD.HeaderText = "IDENTIF. SOD.";
+            this.colIdentifSOD.Name = "colIdentifSOD";
+            this.colIdentifSOD.ReadOnly = true;
+            this.colIdentifSOD.Width = 90;
+            // 
+            // colIdentifOficina
+            // 
+            this.colIdentifOficina.HeaderText = "IDENTIF. OFICINA";
+            this.colIdentifOficina.Name = "colIdentifOficina";
+            this.colIdentifOficina.ReadOnly = true;
+            this.colIdentifOficina.Width = 90;
+            // 
+            // colCertificado
+            // 
+            this.colCertificado.HeaderText = "CERTIFICADO";
+            this.colCertificado.Name = "colCertificado";
+            this.colCertificado.ReadOnly = true;
+            this.colCertificado.Width = 80;
+            // 
+            // colDataCalibracao
+            // 
+            this.colDataCalibracao.HeaderText = "DATA DE CALIBRAÇÃO";
+            this.colDataCalibracao.Name = "colDataCalibracao";
+            this.colDataCalibracao.ReadOnly = true;
+            this.colDataCalibracao.Width = 90;
+            // 
+            // colDataVencimento
+            // 
+            this.colDataVencimento.HeaderText = "DATA DE VENCIMENTO";
+            this.colDataVencimento.Name = "colDataVencimento";
+            this.colDataVencimento.ReadOnly = true;
+            this.colDataVencimento.Width = 90;
+            // 
+            // colSituacao
+            // 
+            this.colSituacao.HeaderText = "SITUAÇÃO";
+            this.colSituacao.Name = "colSituacao";
+            this.colSituacao.ReadOnly = true;
+            this.colSituacao.Width = 90;
+            // 
+            // colExecutante
+            // 
+            this.colExecutante.HeaderText = "EXECUTANTE";
+            this.colExecutante.Name = "colExecutante";
+            this.colExecutante.ReadOnly = true;
+            this.colExecutante.Width = 80;
+            // 
+            // colInstalada
+            // 
+            this.colInstalada.HeaderText = "INSTALADA NO EQUIPAMENTO?";
+            this.colInstalada.Name = "colInstalada";
+            this.colInstalada.ReadOnly = true;
+            this.colInstalada.Width = 90;
+            // 
+            // colLocal
+            // 
+            this.colLocal.HeaderText = "LOCAL";
+            this.colLocal.Name = "colLocal";
+            this.colLocal.ReadOnly = true;
+            this.colLocal.Width = 90;
+            // 
+            // colSubLocalizacao
+            // 
+            this.colSubLocalizacao.HeaderText = "SUB.LOCALIZAÇÃO";
+            this.colSubLocalizacao.Name = "colSubLocalizacao";
+            this.colSubLocalizacao.ReadOnly = true;
+            // 
+            // colFoto
+            // 
+            this.colFoto.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colFoto.HeaderText = "FOTO";
+            this.colFoto.Name = "colFoto";
+            this.colFoto.ReadOnly = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ClientSize = new System.Drawing.Size(1184, 561);
+            this.ClientSize = new System.Drawing.Size(1264, 561);
             this.Controls.Add(this.panelPrincipal);
             this.Controls.Add(this.panelEsquerdo);
             this.Controls.Add(this.panelSuperior);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "I2MS - INDEPENDENT MAINTENANCE SYSTEM";
+            this.Text = "CONTROLE DE CALIBRAÇÃO DE INSTRUMENTOS";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.panelEsquerdo.ResumeLayout(false);
             this.panelSuperior.ResumeLayout(false);
             this.panelSuperior.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvOrdensServico)).EndInit();
             this.panelPrincipal.ResumeLayout(false);
             this.panelPrincipal.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDados)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion
 
         private System.Windows.Forms.Panel panelEsquerdo;
-        private System.Windows.Forms.Panel panelSuperior;
-        private System.Windows.Forms.Label lblTitulo;
-        private System.Windows.Forms.DataGridView dgvOrdensServico;
-        private System.Windows.Forms.RadioButton radTodas;
-        private System.Windows.Forms.RadioButton radAbertas;
-        private System.Windows.Forms.RadioButton radEncerradas;
-        private System.Windows.Forms.Button btnConfiguracoes;
         private System.Windows.Forms.Button btnBuscaAvancada;
         private System.Windows.Forms.Button btnRelatorios;
         private System.Windows.Forms.Button btnFiltrar;
+        private System.Windows.Forms.Button btnExcluir;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.Button btnNova;
-        private System.Windows.Forms.Button btnOrdensServico;
+        private System.Windows.Forms.Button btnInstrumentos;
         private System.Windows.Forms.Button btnProcurar;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OS;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Abertura;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Fechamento;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Prazo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OM;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Artigo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TipoArtigo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Cliente;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Descricao;
+        private System.Windows.Forms.Button btnConfiguracoes;
+        private System.Windows.Forms.Panel panelSuperior;
+        private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.Panel panelPrincipal;
+        private System.Windows.Forms.Label lblBusca;
+        private System.Windows.Forms.TextBox txtBusca;
+        private System.Windows.Forms.DataGridView dgvDados;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colInstrumento;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colModelo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPN;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSN;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colIdentifSOD;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colIdentifOficina;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCertificado;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDataCalibracao;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDataVencimento;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSituacao;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colExecutante;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colInstalada;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colLocal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSubLocalizacao;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFoto;
     }
 }
