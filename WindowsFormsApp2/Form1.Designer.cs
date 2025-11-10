@@ -2,15 +2,8 @@
 {
     partial class Form1
     {
-        /// <summary>
-        /// Variável de designer necessária.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Código gerado pelo Windows Form Designer
 
-        /// <summary>
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
         private void InitializeComponent()
         {
             this.panelEsquerdo = new System.Windows.Forms.Panel();
@@ -59,6 +48,9 @@
             this.colLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSubLocalizacao = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colFoto = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colObservacoes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMecanico = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCertificadoPDF = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelEsquerdo.SuspendLayout();
             this.panelSuperior.SuspendLayout();
             this.panelPrincipal.SuspendLayout();
@@ -303,7 +295,7 @@
             this.dgvDados.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvDados.BackgroundColor = System.Drawing.Color.White;
             this.dgvDados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.colInstrumento, this.colModelo, this.colPN, this.colSN, this.colIdentifSOD, this.colIdentifOficina, this.colCertificado, this.colDataCalibracao, this.colDataVencimento, this.colSituacao, this.colExecutante, this.colInstalada, this.colLocal, this.colSubLocalizacao, this.colFoto });
+            this.dgvDados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.colInstrumento, this.colModelo, this.colPN, this.colSN, this.colIdentifSOD, this.colIdentifOficina, this.colCertificado, this.colDataCalibracao, this.colDataVencimento, this.colSituacao, this.colExecutante, this.colInstalada, this.colLocal, this.colSubLocalizacao, this.colFoto, this.colObservacoes, this.colMecanico, this.colCertificadoPDF });
             this.dgvDados.Location = new System.Drawing.Point(10, 45);
             this.dgvDados.MultiSelect = false;
             this.dgvDados.Name = "dgvDados";
@@ -414,10 +406,28 @@
             // 
             // colFoto
             // 
-            this.colFoto.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colFoto.HeaderText = "FOTO";
             this.colFoto.Name = "colFoto";
             this.colFoto.ReadOnly = true;
+            // 
+            // colObservacoes
+            // 
+            this.colObservacoes.HeaderText = "OBSERVACOES";
+            this.colObservacoes.Name = "colObservacoes";
+            this.colObservacoes.ReadOnly = true;
+            // 
+            // colMecanico
+            // 
+            this.colMecanico.HeaderText = "MECANICO";
+            this.colMecanico.Name = "colMecanico";
+            this.colMecanico.ReadOnly = true;
+            // 
+            // colCertificadoPDF
+            // 
+            this.colCertificadoPDF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colCertificadoPDF.HeaderText = "CERTIFICADO_PDF";
+            this.colCertificadoPDF.Name = "colCertificadoPDF";
+            this.colCertificadoPDF.ReadOnly = true;
             // 
             // Form1
             // 
@@ -439,6 +449,7 @@
             this.panelPrincipal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDados)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -474,5 +485,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colLocal;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSubLocalizacao;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFoto;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colObservacoes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colMecanico;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCertificadoPDF;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Globalization;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp2
@@ -7,6 +8,8 @@ namespace WindowsFormsApp2
     public partial class FormItemEditar : Form
     {
         public object[] ItemEditadoDados { get; private set; }
+        private string pastaCertificados = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Certificados");
+        private string pastaImagens = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagens");
 
         public FormItemEditar(DataGridViewRow linhaParaEditar)
         {
@@ -26,7 +29,6 @@ namespace WindowsFormsApp2
 
             if (DateTime.TryParse(linha.Cells["colDataCalibracao"].Value?.ToString(), out DateTime dataCal))
                 dtpDataCalibracao.Value = dataCal;
-
             if (DateTime.TryParse(linha.Cells["colDataVencimento"].Value?.ToString(), out DateTime dataVenc))
                 dtpDataVencimento.Value = dataVenc;
 
@@ -34,6 +36,30 @@ namespace WindowsFormsApp2
             txtInstalada.Text = linha.Cells["colInstalada"].Value?.ToString();
             txtLocal.Text = linha.Cells["colLocal"].Value?.ToString();
             txtSubLocalizacao.Text = linha.Cells["colSubLocalizacao"].Value?.ToString();
+
+            // Carrega os novos campos
+            txtCaminhoFoto.Text = linha.Cells["colFoto"].Value?.ToString();
+            txtObservacoes.Text = linha.Cells["colObservacoes"].Value?.ToString();
+            txtMecanico.Text = linha.Cells["colMecanico"].Value?.ToString();
+            txtCaminhoPDF.Text = linha.Cells["colCertificadoPDF"].Value?.ToString();
+
+            // Carrega a pré-visualização da foto
+            if (!string.IsNullOrEmpty(txtCaminhoFoto.Text))
+            {
+                string caminhoFoto = Path.Combine(pastaImagens, txtCaminhoFoto.Text);
+                if (File.Exists(caminhoFoto))
+                    pictureBoxFoto.Image = Image.FromFile(caminhoFoto);
+            }
+        }
+
+        private void btnSelecionarFoto_Click(object sender, EventArgs e)
+        {
+            // (Código idêntico ao do FormItemNovo.cs)
+        }
+
+        private void btnAnexarPDF_Click(object sender, EventArgs e)
+        {
+            // (Código idêntico ao do FormItemNovo.cs)
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
@@ -49,13 +75,16 @@ namespace WindowsFormsApp2
                 txtCertificado.Text,
                 dtpDataCalibracao.Value,
                 dtpDataVencimento.Value,
-                null, // Espaço para SITUAÇÃO (será recalculado)
+                null, // SITUAÇÃO
                 txtExecutante.Text,
                 txtInstalada.Text,
                 txtLocal.Text,
-                txtSubLocalizacao.Text
+                txtSubLocalizacao.Text,
+                txtCaminhoFoto.Text,
+                txtObservacoes.Text, // NOVO
+                txtMecanico.Text, // NOVO
+                txtCaminhoPDF.Text // NOVO
             };
-
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -64,6 +93,11 @@ namespace WindowsFormsApp2
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void btnAnexarPDF_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
