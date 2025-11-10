@@ -11,14 +11,22 @@ namespace WindowsFormsApp2
     public partial class Form1 : Form
     {
         private string usuarioAtual;
+        private string caminhoDoCsv;
+        private string pastaDasImagens;
 
         public Form1(string usuarioLogado)
         {
             InitializeComponent();
+
             this.usuarioAtual = usuarioLogado;
             this.Text = $"CONTROLE DE CALIBRAÇÃO - Usuário: {this.usuarioAtual}";
 
-            if (this.usuarioAtual.ToLower() == "Matheus.machado")
+            // ESTA É A LÓGICA CORRETA PARA ENCONTRAR OS ARQUIVOS
+            string pastaDoPrograma = AppDomain.CurrentDomain.BaseDirectory;
+            this.caminhoDoCsv = Path.Combine(pastaDoPrograma, "dados.csv");
+            this.pastaDasImagens = Path.Combine(pastaDoPrograma, "Imagens");
+
+            if (this.usuarioAtual.ToLower() == "matheus.machado")
             {
                 btnEditar.Enabled = true;
                 btnExcluir.Enabled = true;
@@ -30,34 +38,26 @@ namespace WindowsFormsApp2
             }
         }
 
-        // --- FUNÇÃO ATUALIZADA ABAIXO ---
         private void Form1_Load(object sender, EventArgs e)
         {
-            string caminhoArquivo = "dados.csv";
-            if (File.Exists(caminhoArquivo))
+            if (File.Exists(caminhoDoCsv))
             {
-                string[] linhas = File.ReadAllLines(caminhoArquivo);
+                string[] linhas = File.ReadAllLines(caminhoDoCsv);
                 for (int i = 1; i < linhas.Length; i++)
                 {
                     if (string.IsNullOrWhiteSpace(linhas[i])) continue;
 
                     string[] colunasLidasDoCsv = linhas[i].Split(';');
-
-                    // Cria um "molde" de array com o tamanho exato da grade (15 posições)
                     object[] linhaParaGrid = new object[dgvDados.Columns.Count];
-
-                    // Copia os dados que foram lidos do CSV para dentro do nosso "molde".
-                    // Se o CSV tiver menos de 15 colunas, o resto do molde ficará vazio (null).
                     int colunasACopiar = Math.Min(colunasLidasDoCsv.Length, linhaParaGrid.Length);
                     Array.Copy(colunasLidasDoCsv, linhaParaGrid, colunasACopiar);
 
-                    // Adiciona a linha perfeitamente formatada na grade
                     dgvDados.Rows.Add(linhaParaGrid);
                 }
             }
             else
             {
-                MessageBox.Show("Arquivo 'dados.csv' não encontrado.");
+                MessageBox.Show($"Arquivo 'dados.csv' não encontrado no caminho: {caminhoDoCsv}");
             }
         }
 
@@ -82,7 +82,7 @@ namespace WindowsFormsApp2
                 {
                     for (int i = 0; i < formularioDeEdicao.ItemEditadoDados.Length; i++)
                     {
-                        if (i != 9) // 9 é o índice da coluna "Situação"
+                        if (i != 9)
                         {
                             linhaSelecionada.Cells[i].Value = formularioDeEdicao.ItemEditadoDados[i];
                         }
@@ -137,7 +137,7 @@ namespace WindowsFormsApp2
                     linhasParaSalvar.Add(string.Join(";", celulas));
                 }
 
-                File.WriteAllLines("dados.csv", linhasParaSalvar);
+                File.WriteAllLines(caminhoDoCsv, linhasParaSalvar);
             }
             catch (Exception ex)
             {
@@ -150,34 +150,24 @@ namespace WindowsFormsApp2
             bool novoEstadoVisivel = !txtBusca.Visible;
             txtBusca.Visible = novoEstadoVisivel;
             lblBusca.Visible = novoEstadoVisivel;
-
             if (novoEstadoVisivel)
-            {
                 txtBusca.Focus();
-            }
             else
-            {
                 txtBusca.Text = "";
-            }
         }
 
         private void txtBusca_TextChanged(object sender, EventArgs e)
         {
             string termoBusca = txtBusca.Text.ToLower();
-
             foreach (DataGridViewRow linha in dgvDados.Rows)
             {
                 var celula = linha.Cells["colInstrumento"].Value;
                 if (celula != null)
                 {
                     if (celula.ToString().ToLower().Contains(termoBusca))
-                    {
                         linha.Visible = true;
-                    }
                     else
-                    {
                         linha.Visible = false;
-                    }
                 }
             }
         }
@@ -194,7 +184,6 @@ namespace WindowsFormsApp2
                 if (celulaData.Value != null && DateTime.TryParseExact(celulaData.Value.ToString().Trim(), formatosDeData, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataVencimento))
                 {
                     int diasAVencer = (int)(dataVencimento.Date - DateTime.Today).TotalDays;
-
                     string situacao;
                     if (diasAVencer > 45)
                     {
@@ -223,13 +212,10 @@ namespace WindowsFormsApp2
         private void dgvDados_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
-
             string nomeArquivoFoto = dgvDados.Rows[e.RowIndex].Cells["colFoto"].Value?.ToString();
-
             if (!string.IsNullOrEmpty(nomeArquivoFoto))
             {
-                string caminhoCompleto = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagens", nomeArquivoFoto);
-
+                string caminhoCompleto = Path.Combine(this.pastaDasImagens, nomeArquivoFoto);
                 if (File.Exists(caminhoCompleto))
                 {
                     FormVerFoto formFoto = new FormVerFoto(caminhoCompleto);
