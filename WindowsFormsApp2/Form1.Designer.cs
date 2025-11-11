@@ -21,6 +21,8 @@
             this.btnBuscaAvancada = new System.Windows.Forms.Button();
             this.btnRelatorios = new System.Windows.Forms.Button();
             this.btnFiltrar = new System.Windows.Forms.Button();
+            this.btnMovimentacao = new System.Windows.Forms.Button();
+            this.btnMecanicos = new System.Windows.Forms.Button();
             this.btnExcluir = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnNova = new System.Windows.Forms.Button();
@@ -63,6 +65,8 @@
             this.panelEsquerdo.Controls.Add(this.btnBuscaAvancada);
             this.panelEsquerdo.Controls.Add(this.btnRelatorios);
             this.panelEsquerdo.Controls.Add(this.btnFiltrar);
+            this.panelEsquerdo.Controls.Add(this.btnMovimentacao);
+            this.panelEsquerdo.Controls.Add(this.btnMecanicos);
             this.panelEsquerdo.Controls.Add(this.btnExcluir);
             this.panelEsquerdo.Controls.Add(this.btnEditar);
             this.panelEsquerdo.Controls.Add(this.btnNova);
@@ -83,11 +87,11 @@
             this.btnBuscaAvancada.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBuscaAvancada.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnBuscaAvancada.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnBuscaAvancada.Location = new System.Drawing.Point(0, 320);
+            this.btnBuscaAvancada.Location = new System.Drawing.Point(0, 360);
             this.btnBuscaAvancada.Name = "btnBuscaAvancada";
             this.btnBuscaAvancada.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnBuscaAvancada.Size = new System.Drawing.Size(200, 40);
-            this.btnBuscaAvancada.TabIndex = 8;
+            this.btnBuscaAvancada.TabIndex = 9;
             this.btnBuscaAvancada.Text = "Busca Avançada";
             this.btnBuscaAvancada.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnBuscaAvancada.UseVisualStyleBackColor = false;
@@ -100,11 +104,11 @@
             this.btnRelatorios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRelatorios.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnRelatorios.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnRelatorios.Location = new System.Drawing.Point(0, 280);
+            this.btnRelatorios.Location = new System.Drawing.Point(0, 320);
             this.btnRelatorios.Name = "btnRelatorios";
             this.btnRelatorios.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnRelatorios.Size = new System.Drawing.Size(200, 40);
-            this.btnRelatorios.TabIndex = 7;
+            this.btnRelatorios.TabIndex = 8;
             this.btnRelatorios.Text = "Relatórios";
             this.btnRelatorios.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnRelatorios.UseVisualStyleBackColor = false;
@@ -117,14 +121,51 @@
             this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnFiltrar.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnFiltrar.Location = new System.Drawing.Point(0, 240);
+            this.btnFiltrar.Location = new System.Drawing.Point(0, 280);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnFiltrar.Size = new System.Drawing.Size(200, 40);
-            this.btnFiltrar.TabIndex = 6;
+            this.btnFiltrar.TabIndex = 7;
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.UseVisualStyleBackColor = false;
+            // 
+            // btnMovimentacao
+            // 
+            this.btnMovimentacao.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.btnMovimentacao.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMovimentacao.FlatAppearance.BorderSize = 0;
+            this.btnMovimentacao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMovimentacao.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnMovimentacao.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnMovimentacao.Location = new System.Drawing.Point(0, 240);
+            this.btnMovimentacao.Name = "btnMovimentacao";
+            this.btnMovimentacao.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnMovimentacao.Size = new System.Drawing.Size(200, 40);
+            this.btnMovimentacao.TabIndex = 6;
+            this.btnMovimentacao.Text = "Movimentação";
+            this.btnMovimentacao.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMovimentacao.UseVisualStyleBackColor = false;
+            this.btnMovimentacao.Click += new System.EventHandler(this.btnMovimentacao_Click);
+            // 
+            // btnMecanicos
+            // 
+            this.btnMecanicos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.btnMecanicos.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMecanicos.Enabled = false;
+            this.btnMecanicos.FlatAppearance.BorderSize = 0;
+            this.btnMecanicos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMecanicos.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnMecanicos.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnMecanicos.Location = new System.Drawing.Point(0, 200);
+            this.btnMecanicos.Name = "btnMecanicos";
+            this.btnMecanicos.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnMecanicos.Size = new System.Drawing.Size(200, 40);
+            this.btnMecanicos.TabIndex = 5;
+            this.btnMecanicos.Text = "Mecânicos";
+            this.btnMecanicos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMecanicos.UseVisualStyleBackColor = false;
+            this.btnMecanicos.Click += new System.EventHandler(this.btnMecanicos_Click);
             // 
             // btnExcluir
             // 
@@ -135,11 +176,11 @@
             this.btnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExcluir.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnExcluir.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnExcluir.Location = new System.Drawing.Point(0, 200);
+            this.btnExcluir.Location = new System.Drawing.Point(0, 160);
             this.btnExcluir.Name = "btnExcluir";
             this.btnExcluir.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnExcluir.Size = new System.Drawing.Size(200, 40);
-            this.btnExcluir.TabIndex = 5;
+            this.btnExcluir.TabIndex = 4;
             this.btnExcluir.Text = "Excluir";
             this.btnExcluir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnExcluir.UseVisualStyleBackColor = false;
@@ -154,11 +195,11 @@
             this.btnEditar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnEditar.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnEditar.Location = new System.Drawing.Point(0, 160);
+            this.btnEditar.Location = new System.Drawing.Point(0, 120);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnEditar.Size = new System.Drawing.Size(200, 40);
-            this.btnEditar.TabIndex = 4;
+            this.btnEditar.TabIndex = 3;
             this.btnEditar.Text = "Editar";
             this.btnEditar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEditar.UseVisualStyleBackColor = false;
@@ -172,11 +213,11 @@
             this.btnNova.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNova.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnNova.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnNova.Location = new System.Drawing.Point(0, 120);
+            this.btnNova.Location = new System.Drawing.Point(0, 80);
             this.btnNova.Name = "btnNova";
             this.btnNova.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnNova.Size = new System.Drawing.Size(200, 40);
-            this.btnNova.TabIndex = 3;
+            this.btnNova.TabIndex = 2;
             this.btnNova.Text = "Nova";
             this.btnNova.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNova.UseVisualStyleBackColor = false;
@@ -190,11 +231,11 @@
             this.btnInstrumentos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInstrumentos.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnInstrumentos.ForeColor = System.Drawing.Color.White;
-            this.btnInstrumentos.Location = new System.Drawing.Point(0, 80);
+            this.btnInstrumentos.Location = new System.Drawing.Point(0, 40);
             this.btnInstrumentos.Name = "btnInstrumentos";
             this.btnInstrumentos.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnInstrumentos.Size = new System.Drawing.Size(200, 40);
-            this.btnInstrumentos.TabIndex = 2;
+            this.btnInstrumentos.TabIndex = 1;
             this.btnInstrumentos.Text = "Instrumentos";
             this.btnInstrumentos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnInstrumentos.UseVisualStyleBackColor = false;
@@ -207,11 +248,11 @@
             this.btnProcurar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProcurar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnProcurar.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnProcurar.Location = new System.Drawing.Point(0, 40);
+            this.btnProcurar.Location = new System.Drawing.Point(0, 0);
             this.btnProcurar.Name = "btnProcurar";
             this.btnProcurar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnProcurar.Size = new System.Drawing.Size(200, 40);
-            this.btnProcurar.TabIndex = 1;
+            this.btnProcurar.TabIndex = 0;
             this.btnProcurar.Text = "Procurar";
             this.btnProcurar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnProcurar.UseVisualStyleBackColor = false;
@@ -220,16 +261,16 @@
             // btnConfiguracoes
             // 
             this.btnConfiguracoes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.btnConfiguracoes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnConfiguracoes.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.btnConfiguracoes.FlatAppearance.BorderSize = 0;
             this.btnConfiguracoes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConfiguracoes.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnConfiguracoes.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnConfiguracoes.Location = new System.Drawing.Point(0, 0);
+            this.btnConfiguracoes.Location = new System.Drawing.Point(0, 481);
             this.btnConfiguracoes.Name = "btnConfiguracoes";
             this.btnConfiguracoes.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnConfiguracoes.Size = new System.Drawing.Size(200, 40);
-            this.btnConfiguracoes.TabIndex = 0;
+            this.btnConfiguracoes.TabIndex = 10;
             this.btnConfiguracoes.Text = "CONFIGURAÇÕES";
             this.btnConfiguracoes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConfiguracoes.UseVisualStyleBackColor = false;
@@ -488,5 +529,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colObservacoes;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMecanico;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCertificadoPDF;
+        private System.Windows.Forms.Button btnMecanicos;
+        private System.Windows.Forms.Button btnMovimentacao;
     }
 }
