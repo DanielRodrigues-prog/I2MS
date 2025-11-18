@@ -34,6 +34,8 @@
             this.panelPrincipal = new System.Windows.Forms.Panel();
             this.lblBusca = new System.Windows.Forms.Label();
             this.txtBusca = new System.Windows.Forms.TextBox();
+            this.tabControlPrincipal = new System.Windows.Forms.TabControl();
+            this.tabComCalibracao = new System.Windows.Forms.TabPage();
             this.dgvDados = new System.Windows.Forms.DataGridView();
             this.colInstrumento = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colModelo = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,10 +55,25 @@
             this.colObservacoes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMecanico = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCertificadoPDF = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabSemCalibracao = new System.Windows.Forms.TabPage();
+            this.dgvSemCalibracao = new System.Windows.Forms.DataGridView();
+            this.colSemDescricao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemCodigo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemPN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemFabricante = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemCadastroLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemCodLocal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSemMecanico = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelEsquerdo.SuspendLayout();
             this.panelSuperior.SuspendLayout();
             this.panelPrincipal.SuspendLayout();
+            this.tabControlPrincipal.SuspendLayout();
+            this.tabComCalibracao.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDados)).BeginInit();
+            this.tabSemCalibracao.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSemCalibracao)).BeginInit();
             this.SuspendLayout();
             // 
             // panelEsquerdo
@@ -199,7 +216,7 @@
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnEditar.Size = new System.Drawing.Size(200, 40);
-            this.btnEditar.TabIndex = 3;
+            this.btnEditar.TabIndex = 4;
             this.btnEditar.Text = "Editar";
             this.btnEditar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEditar.UseVisualStyleBackColor = false;
@@ -217,7 +234,7 @@
             this.btnNova.Name = "btnNova";
             this.btnNova.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnNova.Size = new System.Drawing.Size(200, 40);
-            this.btnNova.TabIndex = 2;
+            this.btnNova.TabIndex = 3;
             this.btnNova.Text = "Nova";
             this.btnNova.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNova.UseVisualStyleBackColor = false;
@@ -270,7 +287,7 @@
             this.btnConfiguracoes.Name = "btnConfiguracoes";
             this.btnConfiguracoes.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnConfiguracoes.Size = new System.Drawing.Size(200, 40);
-            this.btnConfiguracoes.TabIndex = 10;
+            this.btnConfiguracoes.TabIndex = 0;
             this.btnConfiguracoes.Text = "CONFIGURAÇÕES";
             this.btnConfiguracoes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnConfiguracoes.UseVisualStyleBackColor = false;
@@ -301,7 +318,7 @@
             this.panelPrincipal.BackColor = System.Drawing.Color.WhiteSmoke;
             this.panelPrincipal.Controls.Add(this.lblBusca);
             this.panelPrincipal.Controls.Add(this.txtBusca);
-            this.panelPrincipal.Controls.Add(this.dgvDados);
+            this.panelPrincipal.Controls.Add(this.tabControlPrincipal);
             this.panelPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPrincipal.Location = new System.Drawing.Point(200, 40);
             this.panelPrincipal.Name = "panelPrincipal";
@@ -329,21 +346,46 @@
             this.txtBusca.Visible = false;
             this.txtBusca.TextChanged += new System.EventHandler(this.txtBusca_TextChanged);
             // 
+            // tabControlPrincipal
+            // 
+            this.tabControlPrincipal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlPrincipal.Controls.Add(this.tabComCalibracao);
+            this.tabControlPrincipal.Controls.Add(this.tabSemCalibracao);
+            this.tabControlPrincipal.Location = new System.Drawing.Point(10, 45);
+            this.tabControlPrincipal.Name = "tabControlPrincipal";
+            this.tabControlPrincipal.SelectedIndex = 0;
+            this.tabControlPrincipal.Size = new System.Drawing.Size(1042, 464);
+            this.tabControlPrincipal.TabIndex = 0;
+            // 
+            // tabComCalibracao
+            // 
+            this.tabComCalibracao.Controls.Add(this.dgvDados);
+            this.tabComCalibracao.Location = new System.Drawing.Point(4, 22);
+            this.tabComCalibracao.Name = "tabComCalibracao";
+            this.tabComCalibracao.Padding = new System.Windows.Forms.Padding(3);
+            this.tabComCalibracao.Size = new System.Drawing.Size(1034, 438);
+            this.tabComCalibracao.TabIndex = 0;
+            this.tabComCalibracao.Text = "Com Calibração";
+            this.tabComCalibracao.UseVisualStyleBackColor = true;
+            // 
             // dgvDados
             // 
             this.dgvDados.AllowUserToAddRows = false;
             this.dgvDados.AllowUserToDeleteRows = false;
-            this.dgvDados.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvDados.BackgroundColor = System.Drawing.Color.White;
             this.dgvDados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.colInstrumento, this.colModelo, this.colPN, this.colSN, this.colIdentifSOD, this.colIdentifOficina, this.colCertificado, this.colDataCalibracao, this.colDataVencimento, this.colSituacao, this.colExecutante, this.colInstalada, this.colLocal, this.colSubLocalizacao, this.colFoto, this.colObservacoes, this.colMecanico, this.colCertificadoPDF });
-            this.dgvDados.Location = new System.Drawing.Point(10, 45);
+            this.dgvDados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colInstrumento, this.colModelo, this.colPN, this.colSN, this.colIdentifSOD, this.colIdentifOficina,
+            this.colCertificado, this.colDataCalibracao, this.colDataVencimento, this.colSituacao, this.colExecutante,
+            this.colInstalada, this.colLocal, this.colSubLocalizacao, this.colFoto, this.colObservacoes, this.colMecanico, this.colCertificadoPDF});
+            this.dgvDados.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvDados.Location = new System.Drawing.Point(3, 3);
             this.dgvDados.MultiSelect = false;
             this.dgvDados.Name = "dgvDados";
             this.dgvDados.ReadOnly = true;
             this.dgvDados.RowHeadersVisible = false;
             this.dgvDados.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDados.Size = new System.Drawing.Size(1042, 464);
+            this.dgvDados.Size = new System.Drawing.Size(1028, 432);
             this.dgvDados.TabIndex = 0;
             this.dgvDados.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDados_CellDoubleClick);
             this.dgvDados.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvDados_CellFormatting);
@@ -470,6 +512,97 @@
             this.colCertificadoPDF.Name = "colCertificadoPDF";
             this.colCertificadoPDF.ReadOnly = true;
             // 
+            // tabSemCalibracao
+            // 
+            this.tabSemCalibracao.Controls.Add(this.dgvSemCalibracao);
+            this.tabSemCalibracao.Location = new System.Drawing.Point(4, 22);
+            this.tabSemCalibracao.Name = "tabSemCalibracao";
+            this.tabSemCalibracao.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSemCalibracao.Size = new System.Drawing.Size(1034, 438);
+            this.tabSemCalibracao.TabIndex = 1;
+            this.tabSemCalibracao.Text = "Sem Calibração";
+            this.tabSemCalibracao.UseVisualStyleBackColor = true;
+            // 
+            // dgvSemCalibracao
+            // 
+            this.dgvSemCalibracao.AllowUserToAddRows = false;
+            this.dgvSemCalibracao.AllowUserToDeleteRows = false;
+            this.dgvSemCalibracao.BackgroundColor = System.Drawing.Color.White;
+            this.dgvSemCalibracao.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvSemCalibracao.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colSemDescricao,
+            this.colSemCodigo,
+            this.colSemPN,
+            this.colSemFabricante,
+            this.colSemLocal,
+            this.colSemCadastroLocal,
+            this.colSemCodLocal,
+            this.colSemStatus,
+            this.colSemMecanico});
+            this.dgvSemCalibracao.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvSemCalibracao.Location = new System.Drawing.Point(3, 3);
+            this.dgvSemCalibracao.MultiSelect = false;
+            this.dgvSemCalibracao.Name = "dgvSemCalibracao";
+            this.dgvSemCalibracao.ReadOnly = true;
+            this.dgvSemCalibracao.RowHeadersVisible = false;
+            this.dgvSemCalibracao.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvSemCalibracao.Size = new System.Drawing.Size(1028, 432);
+            this.dgvSemCalibracao.TabIndex = 0;
+            // 
+            // colSemDescricao
+            // 
+            this.colSemDescricao.HeaderText = "DESCRIÇÃO";
+            this.colSemDescricao.Name = "colSemDescricao";
+            this.colSemDescricao.ReadOnly = true;
+            // 
+            // colSemCodigo
+            // 
+            this.colSemCodigo.HeaderText = "CÓDIGO";
+            this.colSemCodigo.Name = "colSemCodigo";
+            this.colSemCodigo.ReadOnly = true;
+            // 
+            // colSemPN
+            // 
+            this.colSemPN.HeaderText = "PN";
+            this.colSemPN.Name = "colSemPN";
+            this.colSemPN.ReadOnly = true;
+            // 
+            // colSemFabricante
+            // 
+            this.colSemFabricante.HeaderText = "FABRICANTE";
+            this.colSemFabricante.Name = "colSemFabricante";
+            this.colSemFabricante.ReadOnly = true;
+            // 
+            // colSemLocal
+            // 
+            this.colSemLocal.HeaderText = "LOCAL";
+            this.colSemLocal.Name = "colSemLocal";
+            this.colSemLocal.ReadOnly = true;
+            // 
+            // colSemCadastroLocal
+            // 
+            this.colSemCadastroLocal.HeaderText = "CADASTRO LOCAL";
+            this.colSemCadastroLocal.Name = "colSemCadastroLocal";
+            this.colSemCadastroLocal.ReadOnly = true;
+            // 
+            // colSemCodLocal
+            // 
+            this.colSemCodLocal.HeaderText = "COD LOCAL";
+            this.colSemCodLocal.Name = "colSemCodLocal";
+            this.colSemCodLocal.ReadOnly = true;
+            // 
+            // colSemStatus
+            // 
+            this.colSemStatus.HeaderText = "STATUS";
+            this.colSemStatus.Name = "colSemStatus";
+            this.colSemStatus.ReadOnly = true;
+            // 
+            // colSemMecanico
+            // 
+            this.colSemMecanico.HeaderText = "MECANICO";
+            this.colSemMecanico.Name = "colSemMecanico";
+            this.colSemMecanico.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -488,7 +621,11 @@
             this.panelSuperior.PerformLayout();
             this.panelPrincipal.ResumeLayout(false);
             this.panelPrincipal.PerformLayout();
+            this.tabControlPrincipal.ResumeLayout(false);
+            this.tabComCalibracao.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDados)).EndInit();
+            this.tabSemCalibracao.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSemCalibracao)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -499,6 +636,8 @@
         private System.Windows.Forms.Button btnBuscaAvancada;
         private System.Windows.Forms.Button btnRelatorios;
         private System.Windows.Forms.Button btnFiltrar;
+        private System.Windows.Forms.Button btnMovimentacao;
+        private System.Windows.Forms.Button btnMecanicos;
         private System.Windows.Forms.Button btnExcluir;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.Button btnNova;
@@ -510,7 +649,13 @@
         private System.Windows.Forms.Panel panelPrincipal;
         private System.Windows.Forms.Label lblBusca;
         private System.Windows.Forms.TextBox txtBusca;
+
+        private System.Windows.Forms.TabControl tabControlPrincipal;
+        private System.Windows.Forms.TabPage tabComCalibracao;
         private System.Windows.Forms.DataGridView dgvDados;
+        private System.Windows.Forms.TabPage tabSemCalibracao;
+        private System.Windows.Forms.DataGridView dgvSemCalibracao;
+
         private System.Windows.Forms.DataGridViewTextBoxColumn colInstrumento;
         private System.Windows.Forms.DataGridViewTextBoxColumn colModelo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPN;
@@ -529,7 +674,16 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colObservacoes;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMecanico;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCertificadoPDF;
-        private System.Windows.Forms.Button btnMecanicos;
-        private System.Windows.Forms.Button btnMovimentacao;
+
+        // Colunas da Nova Tabela
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemDescricao;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemCodigo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemPN;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemFabricante;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemLocal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemCadastroLocal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemCodLocal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemStatus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSemMecanico;
     }
 }
