@@ -122,6 +122,12 @@
     <Compile Include="FormItemNovo.Designer.cs">
       <DependentUpon>FormItemNovo.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormItemSemCalibracao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormItemSemCalibracao.Designer.cs">
+      <DependentUpon>FormItemSemCalibracao.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMecanicos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +139,12 @@
     </Compile>
     <Compile Include="FormMovimentacao.Designer.cs">
       <DependentUpon>FormMovimentacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSemCalibracao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSemCalibracao.Designer.cs">
+      <DependentUpon>FormSemCalibracao.cs</DependentUpon>
     </Compile>
     <Compile Include="FormVerFoto.cs">
       <SubType>Form</SubType>
@@ -154,11 +166,17 @@
     <EmbeddedResource Include="FormItemNovo.resx">
       <DependentUpon>FormItemNovo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormItemSemCalibracao.resx">
+      <DependentUpon>FormItemSemCalibracao.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMecanicos.resx">
       <DependentUpon>FormMecanicos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMovimentacao.resx">
       <DependentUpon>FormMovimentacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSemCalibracao.resx">
+      <DependentUpon>FormSemCalibracao.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormVerFoto.resx">
       <DependentUpon>FormVerFoto.cs</DependentUpon>
@@ -173,6 +191,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Content Include="dados.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dados_sem_calibracao.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
