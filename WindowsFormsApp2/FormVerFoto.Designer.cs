@@ -40,6 +40,7 @@
             this.Name = "FormVerFoto";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Visualizador de Imagem";
+            this.Load += new System.EventHandler(this.FormVerFoto_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

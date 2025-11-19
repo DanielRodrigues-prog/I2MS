@@ -20,5 +20,10 @@ namespace WindowsFormsApp2
                 pictureBox1.Image = pictureBox1.ErrorImage;
             }
         }
+
+        private void FormVerFoto_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

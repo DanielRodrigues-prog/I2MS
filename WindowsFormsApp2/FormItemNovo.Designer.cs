@@ -338,7 +338,7 @@
             this.lblMecanico.AutoSize = true;
             this.lblMecanico.Location = new System.Drawing.Point(25, 484);
             this.lblMecanico.Name = "lblMecanico";
-            this.lblMecanico.Size = new System.Drawing.Size(120, 13);
+            this.lblMecanico.Size = new System.Drawing.Size(123, 13);
             this.lblMecanico.TabIndex = 33;
             this.lblMecanico.Text = "Mecânico (ID ou Nome):";
             // 
@@ -354,7 +354,7 @@
             this.lblCertificadoPDF.AutoSize = true;
             this.lblCertificadoPDF.Location = new System.Drawing.Point(384, 484);
             this.lblCertificadoPDF.Name = "lblCertificadoPDF";
-            this.lblCertificadoPDF.Size = new System.Drawing.Size(84, 13);
+            this.lblCertificadoPDF.Size = new System.Drawing.Size(90, 13);
             this.lblCertificadoPDF.TabIndex = 35;
             this.lblCertificadoPDF.Text = "Certificado (PDF):";
             // 
@@ -423,9 +423,11 @@
             this.Name = "FormItemNovo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Adicionar Novo Instrumento";
+            this.Load += new System.EventHandler(this.FormItemNovo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFoto)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

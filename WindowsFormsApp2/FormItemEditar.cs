@@ -99,5 +99,10 @@ namespace WindowsFormsApp2
         {
 
         }
+
+        private void FormItemEditar_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
