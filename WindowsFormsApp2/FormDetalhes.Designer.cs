@@ -45,7 +45,7 @@
             this.lblInstrumentoTitulo.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblInstrumentoTitulo.Location = new System.Drawing.Point(23, 19);
             this.lblInstrumentoTitulo.Name = "lblInstrumentoTitulo";
-            this.lblInstrumentoTitulo.Size = new System.Drawing.Size(188, 25);
+            this.lblInstrumentoTitulo.Size = new System.Drawing.Size(196, 25);
             this.lblInstrumentoTitulo.TabIndex = 1;
             this.lblInstrumentoTitulo.Text = "[Nome Instrumento]";
             // 
@@ -73,7 +73,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(25, 203);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 13);
+            this.label2.Size = new System.Drawing.Size(121, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Em posse do Mecânico:";
             // 
@@ -90,7 +90,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(25, 263);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(126, 13);
+            this.label3.Size = new System.Drawing.Size(128, 13);
             this.label3.TabIndex = 6;
             this.label3.Text = "Certificado de Calibração:";
             // 
@@ -134,9 +134,11 @@
             this.Name = "FormDetalhes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Detalhes do Instrumento";
+            this.Load += new System.EventHandler(this.FormDetalhes_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxFoto)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

@@ -100,5 +100,10 @@ namespace WindowsFormsApp2
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
+        private void FormItemNovo_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

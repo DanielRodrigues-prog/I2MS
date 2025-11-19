@@ -62,5 +62,10 @@ namespace WindowsFormsApp2
                 MessageBox.Show("Não foi possível abrir o arquivo PDF.\n" + ex.Message);
             }
         }
+
+        private void FormDetalhes_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

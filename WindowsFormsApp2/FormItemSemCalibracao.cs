@@ -2,34 +2,30 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using System.Data.SQLite;
+// Removemos o using Microsoft.Data.SqlClient porque não conecta mais direto!
 
 namespace WindowsFormsApp2
 {
     public partial class FormItemSemCalibracao : Form
     {
-        public object[] ItemDados { get; private set; } // Retorna os dados para Form1
-        private bool modoEdicao = false;
-        private long itemId = -1; // Para guardar o ID do item sendo editado
+        // Essa variável guarda os dados para o Form1 ler depois
+        public object[] ItemDados { get; private set; }
+
+        private long itemId = -1;
         private string pastaDasImagens;
         private string pastaDosCertificados;
 
-        // Construtor para NOVO item
         public FormItemSemCalibracao()
         {
             InitializeComponent();
-            this.Text = "Novo Item Sem Calibração";
             ConfigurarPastas();
-            cmbStatus.SelectedIndex = 0; // Define um status padrão
-            txtMecanico.Text = ""; // Novo item começa sem mecânico
+            cmbStatus.SelectedIndex = 0;
+            txtMecanico.Text = "";
         }
 
-        // Construtor para EDITAR item
         public FormItemSemCalibracao(DataGridViewRow linhaSelecionada)
         {
             InitializeComponent();
-            this.Text = "Editar Item Sem Calibração";
-            this.modoEdicao = true;
             ConfigurarPastas();
             CarregarDadosParaEdicao(linhaSelecionada);
         }
@@ -39,99 +35,51 @@ namespace WindowsFormsApp2
             string pastaDoPrograma = AppDomain.CurrentDomain.BaseDirectory;
             this.pastaDasImagens = Path.Combine(pastaDoPrograma, "Imagens");
             this.pastaDosCertificados = Path.Combine(pastaDoPrograma, "Certificados");
+            if (!Directory.Exists(pastaDasImagens)) Directory.CreateDirectory(pastaDasImagens);
+            if (!Directory.Exists(pastaDosCertificados)) Directory.CreateDirectory(pastaDosCertificados);
         }
 
         private void CarregarDadosParaEdicao(DataGridViewRow linha)
         {
-            itemId = Convert.ToInt64(linha.Tag); // O ID está na Tag da linha
+            if (linha.Tag != null) itemId = Convert.ToInt64(linha.Tag);
 
-            // Usamos os nomes das colunas definidos no Form1.Designer.cs para a aba sem calibração
-            // Certifique-se que os nomes das colunas batem com o que está no Form1.Designer.cs
-            // No Form1.Designer.cs atual, as colunas são: colSemDescricao, colSemCodigo, etc.
+            // Carrega apenas o que está no Grid
+            txtDescricao.Text = linha.Cells["colDescricao"].Value?.ToString();
+            txtCodigo.Text = linha.Cells["colCodigo"].Value?.ToString();
+            txtPN.Text = linha.Cells["colPN"].Value?.ToString();
+            txtFabricante.Text = linha.Cells["colFabricante"].Value?.ToString();
+            txtLocal.Text = linha.Cells["colLocal"].Value?.ToString();
+            txtCadastroLocal.Text = linha.Cells["colCadastroLocal"].Value?.ToString();
+            txtCodLocal.Text = linha.Cells["colCodLocal"].Value?.ToString();
 
-            txtDescricao.Text = linha.Cells["colSemDescricao"].Value?.ToString();
-            txtCodigo.Text = linha.Cells["colSemCodigo"].Value?.ToString();
-            txtPN.Text = linha.Cells["colSemPN"].Value?.ToString();
-            txtFabricante.Text = linha.Cells["colSemFabricante"].Value?.ToString();
-            txtLocal.Text = linha.Cells["colSemLocal"].Value?.ToString();
-            txtCadastroLocal.Text = linha.Cells["colSemCadastroLocal"].Value?.ToString();
-            txtCodLocal.Text = linha.Cells["colSemCodLocal"].Value?.ToString();
-            cmbStatus.SelectedItem = linha.Cells["colSemStatus"].Value?.ToString();
-            txtMecanico.Text = linha.Cells["colSemMecanico"].Value?.ToString();
+            string status = linha.Cells["colStatus"].Value?.ToString();
+            if (!string.IsNullOrEmpty(status) && cmbStatus.Items.Contains(status))
+                cmbStatus.SelectedItem = status;
 
-            // Para Foto e Certificado, eles não estão na grade visível (geralmente).
-            // Precisamos buscá-los do banco de dados usando o ID.
-            BuscarExtrasDoBanco(itemId);
-        }
+            // Nota: Mecânico não costuma vir nessa grid simples, mas se tiver, carrega
+            // txtMecanico.Text = ... 
 
-        private void BuscarExtrasDoBanco(long id)
-        {
-            try
-            {
-                using (var conn = Database.GetConnection())
-                {
-                    conn.Open();
-                    string sql = "SELECT Foto, CertificadoPDF FROM FerramentasSemCalibracao WHERE ID = @id";
-                    using (var cmd = new SQLiteCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@id", id);
-                        using (var r = cmd.ExecuteReader())
-                        {
-                            if (r.Read())
-                            {
-                                string nomeFoto = r["Foto"].ToString();
-                                string nomePdf = r["CertificadoPDF"].ToString();
-
-                                if (!string.IsNullOrEmpty(nomeFoto))
-                                {
-                                    string caminhoCompleto = Path.Combine(pastaDasImagens, nomeFoto);
-                                    if (File.Exists(caminhoCompleto))
-                                    {
-                                        picFoto.Image = Image.FromFile(caminhoCompleto);
-                                        txtCaminhoFoto.Text = nomeFoto;
-                                    }
-                                }
-
-                                if (!string.IsNullOrEmpty(nomePdf))
-                                {
-                                    txtCaminhoCertificado.Text = nomePdf;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { MessageBox.Show("Erro ao carregar detalhes extras: " + ex.Message); }
-        }
-
-        private void FormItemSemCalibracao_Load(object sender, EventArgs e)
-        {
-            // Nada específico a carregar aqui no load além do construtor
+            // OBS: Não buscamos mais Foto/PDF no banco aqui (BuscarExtrasDoBanco foi removido).
+            // Se quiser editar a foto, o usuário deve selecionar o arquivo novamente por enquanto.
         }
 
         private void btnSelecionarFoto_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Arquivos de Imagem|*.jpg;*.jpeg;*.png;*.bmp|Todos os Arquivos|*.*";
+                ofd.Filter = "Imagens|*.jpg;*.png;*.bmp";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        // Copia a imagem para a pasta 'Imagens' do projeto
-                        string nomeArquivo = Path.GetFileName(ofd.FileName);
-                        string destino = Path.Combine(pastaDasImagens, nomeArquivo);
-                        File.Copy(ofd.FileName, destino, true); // true para sobrescrever se existir
+                        string nomeUnico = Guid.NewGuid().ToString() + Path.GetExtension(ofd.FileName);
+                        string destino = Path.Combine(pastaDasImagens, nomeUnico);
+                        File.Copy(ofd.FileName, destino, true);
 
                         picFoto.Image = Image.FromFile(destino);
-                        txtCaminhoFoto.Text = nomeArquivo; // Armazena apenas o nome do arquivo no TextBox
+                        txtCaminhoFoto.Text = nomeUnico; // Guarda só o nome do arquivo
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Erro ao carregar ou copiar a imagem: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        picFoto.Image = null;
-                        txtCaminhoFoto.Text = "";
-                    }
+                    catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                 }
             }
         }
@@ -140,56 +88,45 @@ namespace WindowsFormsApp2
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.Filter = "Arquivos PDF|*.pdf|Todos os Arquivos|*.*";
+                ofd.Filter = "PDF|*.pdf";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        // Copia o PDF para a pasta 'Certificados' do projeto
-                        string nomeArquivo = Path.GetFileName(ofd.FileName);
-                        string destino = Path.Combine(pastaDosCertificados, nomeArquivo);
-                        File.Copy(ofd.FileName, destino, true); // true para sobrescrever se existir
+                        string nomeUnico = Guid.NewGuid().ToString() + Path.GetExtension(ofd.FileName);
+                        string destino = Path.Combine(pastaDosCertificados, nomeUnico);
+                        File.Copy(ofd.FileName, destino, true);
 
-                        txtCaminhoCertificado.Text = nomeArquivo; // Armazena apenas o nome do arquivo
+                        txtCaminhoCertificado.Text = nomeUnico; // Guarda só o nome do arquivo
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Erro ao anexar ou copiar o certificado: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        txtCaminhoCertificado.Text = "";
-                    }
+                    catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                 }
             }
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtDescricao.Text))
+            if (string.IsNullOrWhiteSpace(txtDescricao.Text) || string.IsNullOrWhiteSpace(txtCodigo.Text))
             {
-                MessageBox.Show("A descrição é obrigatória.", "Erro de Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Descrição e Código são obrigatórios.");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(txtCodigo.Text))
-            {
-                MessageBox.Show("O código é obrigatório.", "Erro de Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Coleta todos os dados para retornar ao Form1
+            // Prepara o pacote de dados para o Form1 ler e enviar pra API
             ItemDados = new object[]
             {
-                txtDescricao.Text.Trim(),
-                txtCodigo.Text.Trim(),
-                txtPN.Text.Trim(),
-                txtFabricante.Text.Trim(),
-                txtLocal.Text.Trim(),
-                txtCadastroLocal.Text.Trim(),
-                txtCodLocal.Text.Trim(),
-                cmbStatus.SelectedItem?.ToString() ?? "",
-                txtMecanico.Text.Trim(),
-                txtCaminhoFoto.Text.Trim(),
-                txtCaminhoCertificado.Text.Trim(),
-                itemId // Usado para edição (pode ser -1 para novo)
+                txtDescricao.Text.Trim(),       // 0
+                txtCodigo.Text.Trim(),          // 1
+                txtPN.Text.Trim(),              // 2
+                txtFabricante.Text.Trim(),      // 3
+                txtLocal.Text.Trim(),           // 4
+                txtCadastroLocal.Text.Trim(),   // 5
+                txtCodLocal.Text.Trim(),        // 6
+                cmbStatus.SelectedItem?.ToString() ?? "", // 7
+                txtMecanico.Text.Trim(),        // 8
+                txtCaminhoFoto.Text.Trim(),     // 9  (Caminho local da imagem)
+                txtCaminhoCertificado.Text.Trim(), // 10 (Caminho local do PDF)
+                itemId                          // 11
             };
 
             this.DialogResult = DialogResult.OK;
@@ -201,5 +138,7 @@ namespace WindowsFormsApp2
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
+
+        private void FormItemSemCalibracao_Load(object sender, EventArgs e) { }
     }
 }
