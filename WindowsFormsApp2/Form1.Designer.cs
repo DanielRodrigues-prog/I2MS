@@ -343,7 +343,7 @@
             this.panelPrincipal.Name = "panelPrincipal";
             this.panelPrincipal.Size = new System.Drawing.Size(1418, 641);
             this.panelPrincipal.TabIndex = 2;
-            this.panelPrincipal.Paint += new System.Windows.Forms.PaintEventHandler(this.panelPrincipal_Paint);
+   
             // 
             // lblBusca
             // 
