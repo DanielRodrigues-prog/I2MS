@@ -12,7 +12,7 @@ namespace FerramentariaAPI.Controllers
         public FerramentasController(IConfiguration configuration) { _configuration = configuration; }
         private SqlConnection GetConnection() => new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
-        // CLASSES DE MODELO (Internas para facilitar)
+        // --- MODELS INTERNOS ---
         public class Instrumento
         {
             public int ID { get; set; }
@@ -50,7 +50,8 @@ namespace FerramentariaAPI.Controllers
             public byte[]? CertificadoPDF { get; set; }
         }
 
-        // --- COM CALIBRAÇÃO ---
+        // --- COM CALIBRAÇÃO (CRUD COMPLETO) ---
+
         [HttpGet("ComCalibracao")]
         public IActionResult GetCom()
         {
@@ -58,8 +59,7 @@ namespace FerramentariaAPI.Controllers
             using (var c = GetConnection())
             {
                 c.Open();
-                using (var cmd = new SqlCommand("SELECT * FROM Instrumentos", c))
-                using (var r = cmd.ExecuteReader())
+                using (var r = new SqlCommand("SELECT * FROM Instrumentos", c).ExecuteReader())
                 {
                     while (r.Read()) l.Add(new Instrumento
                     {
@@ -148,7 +148,8 @@ namespace FerramentariaAPI.Controllers
             return Ok();
         }
 
-        // --- SEM CALIBRAÇÃO ---
+        // --- SEM CALIBRAÇÃO (CRUD COMPLETO - ADICIONADO PUT/DELETE) ---
+
         [HttpGet("SemCalibracao")]
         public IActionResult GetSem()
         {
@@ -197,6 +198,44 @@ namespace FerramentariaAPI.Controllers
                     cmd.ExecuteNonQuery();
                 }
             }
+            return Ok();
+        }
+
+        // *** NOVOS MÉTODOS PARA SEM CALIBRAÇÃO ***
+        [HttpPut("SemCalibracao/{id}")]
+        public IActionResult PutSem(int id, [FromBody] SemCalibracao i)
+        {
+            using (var c = GetConnection())
+            {
+                c.Open();
+                var sql = "UPDATE FerramentasSemCalibracao SET Descricao=@p1, Codigo=@p2, PN=@p3, Fabricante=@p4, Local=@p5, CadastroLocal=@p6, CodLocal=@p7, Status=@p8, Mecanico=@p9 WHERE ID=@id";
+                if (i.Foto != null) sql = sql.Replace("WHERE", ", Foto=@p10 WHERE");
+                if (i.CertificadoPDF != null) sql = sql.Replace("WHERE", ", CertificadoPDF=@p11 WHERE");
+
+                using (var cmd = new SqlCommand(sql, c))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@p1", i.Descricao ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p2", i.Codigo ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p3", i.PN ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p4", i.Fabricante ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p5", i.Local ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p6", i.CadastroLocal ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p7", i.CodLocal ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p8", i.Status ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@p9", i.Mecanico ?? (object)DBNull.Value);
+                    if (i.Foto != null) cmd.Parameters.Add("@p10", SqlDbType.VarBinary).Value = i.Foto;
+                    if (i.CertificadoPDF != null) cmd.Parameters.Add("@p11", SqlDbType.VarBinary).Value = i.CertificadoPDF;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            return Ok();
+        }
+
+        [HttpDelete("SemCalibracao/{id}")]
+        public IActionResult DelSem(int id)
+        {
+            using (var c = GetConnection()) { c.Open(); new SqlCommand($"DELETE FROM FerramentasSemCalibracao WHERE ID={id}", c).ExecuteNonQuery(); }
             return Ok();
         }
     }

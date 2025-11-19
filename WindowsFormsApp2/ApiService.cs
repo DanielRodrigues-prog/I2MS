@@ -9,11 +9,11 @@ namespace WindowsFormsApp2
 {
     public static class ApiService
     {
-        // *** COLOQUE AQUI A URL DA SUA API NO AZURE (sem a barra no final) ***
+        // *** VERIFIQUE SE A URL ESTÁ CORRETA ***
         private static readonly string BaseUrl = "https://api-ferramentaria-teste-2025-f4bqgfgqc3gpbjef.brazilsouth-01.azurewebsites.net";
         private static readonly HttpClient client = new HttpClient();
 
-        // Modelos
+        // MODELOS
         public class Instrumento
         {
             public int ID { get; set; }
@@ -54,7 +54,7 @@ namespace WindowsFormsApp2
         public class MecInfo { public bool Existe { get; set; } public string Nome { get; set; } }
         public class FerrInfo { public bool Encontrada { get; set; } public string MecanicoAtual { get; set; } }
 
-        // Métodos
+        // --- MÉTODOS COM CALIBRAÇÃO ---
         public static async Task<List<Instrumento>> GetCom()
         {
             var s = await client.GetStringAsync($"{BaseUrl}/api/Ferramentas/ComCalibracao");
@@ -72,6 +72,7 @@ namespace WindowsFormsApp2
         }
         public static async Task DelCom(int id) => (await client.DeleteAsync($"{BaseUrl}/api/Ferramentas/ComCalibracao/{id}")).EnsureSuccessStatusCode();
 
+        // --- MÉTODOS SEM CALIBRAÇÃO (AGORA COMPLETOS) ---
         public static async Task<List<SemCalibracao>> GetSem()
         {
             var s = await client.GetStringAsync($"{BaseUrl}/api/Ferramentas/SemCalibracao");
@@ -82,7 +83,14 @@ namespace WindowsFormsApp2
             var c = new StringContent(JsonConvert.SerializeObject(i), Encoding.UTF8, "application/json");
             (await client.PostAsync($"{BaseUrl}/api/Ferramentas/SemCalibracao", c)).EnsureSuccessStatusCode();
         }
+        public static async Task PutSem(int id, SemCalibracao i)
+        {
+            var c = new StringContent(JsonConvert.SerializeObject(i), Encoding.UTF8, "application/json");
+            (await client.PutAsync($"{BaseUrl}/api/Ferramentas/SemCalibracao/{id}", c)).EnsureSuccessStatusCode();
+        }
+        public static async Task DelSem(int id) => (await client.DeleteAsync($"{BaseUrl}/api/Ferramentas/SemCalibracao/{id}")).EnsureSuccessStatusCode();
 
+        // --- OUTROS MÉTODOS ---
         public static async Task<List<Mecanico>> GetMecs()
         {
             var s = await client.GetStringAsync($"{BaseUrl}/api/Mecanicos");

@@ -91,9 +91,10 @@
             this.panelEsquerdo.Controls.Add(this.btnProcurar);
             this.panelEsquerdo.Controls.Add(this.btnConfiguracoes);
             this.panelEsquerdo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelEsquerdo.Location = new System.Drawing.Point(0, 40);
+            this.panelEsquerdo.Location = new System.Drawing.Point(0, 49);
+            this.panelEsquerdo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelEsquerdo.Name = "panelEsquerdo";
-            this.panelEsquerdo.Size = new System.Drawing.Size(200, 521);
+            this.panelEsquerdo.Size = new System.Drawing.Size(267, 641);
             this.panelEsquerdo.TabIndex = 0;
             // 
             // btnBuscaAvancada
@@ -104,14 +105,16 @@
             this.btnBuscaAvancada.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBuscaAvancada.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnBuscaAvancada.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnBuscaAvancada.Location = new System.Drawing.Point(0, 360);
+            this.btnBuscaAvancada.Location = new System.Drawing.Point(0, 441);
+            this.btnBuscaAvancada.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnBuscaAvancada.Name = "btnBuscaAvancada";
-            this.btnBuscaAvancada.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnBuscaAvancada.Size = new System.Drawing.Size(200, 40);
+            this.btnBuscaAvancada.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnBuscaAvancada.Size = new System.Drawing.Size(267, 49);
             this.btnBuscaAvancada.TabIndex = 9;
             this.btnBuscaAvancada.Text = "Busca Avançada";
             this.btnBuscaAvancada.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnBuscaAvancada.UseVisualStyleBackColor = false;
+            this.btnBuscaAvancada.Click += new System.EventHandler(this.btnBuscaAvancada_Click);
             // 
             // btnRelatorios
             // 
@@ -121,14 +124,16 @@
             this.btnRelatorios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRelatorios.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnRelatorios.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnRelatorios.Location = new System.Drawing.Point(0, 320);
+            this.btnRelatorios.Location = new System.Drawing.Point(0, 392);
+            this.btnRelatorios.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnRelatorios.Name = "btnRelatorios";
-            this.btnRelatorios.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnRelatorios.Size = new System.Drawing.Size(200, 40);
+            this.btnRelatorios.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnRelatorios.Size = new System.Drawing.Size(267, 49);
             this.btnRelatorios.TabIndex = 8;
             this.btnRelatorios.Text = "Relatórios";
             this.btnRelatorios.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnRelatorios.UseVisualStyleBackColor = false;
+            this.btnRelatorios.Click += new System.EventHandler(this.btnRelatorios_Click);
             // 
             // btnFiltrar
             // 
@@ -138,14 +143,16 @@
             this.btnFiltrar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnFiltrar.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnFiltrar.Location = new System.Drawing.Point(0, 280);
+            this.btnFiltrar.Location = new System.Drawing.Point(0, 343);
+            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnFiltrar.Name = "btnFiltrar";
-            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnFiltrar.Size = new System.Drawing.Size(200, 40);
+            this.btnFiltrar.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnFiltrar.Size = new System.Drawing.Size(267, 49);
             this.btnFiltrar.TabIndex = 7;
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFiltrar.UseVisualStyleBackColor = false;
+            this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
             // 
             // btnMovimentacao
             // 
@@ -155,10 +162,11 @@
             this.btnMovimentacao.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMovimentacao.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnMovimentacao.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnMovimentacao.Location = new System.Drawing.Point(0, 240);
+            this.btnMovimentacao.Location = new System.Drawing.Point(0, 294);
+            this.btnMovimentacao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnMovimentacao.Name = "btnMovimentacao";
-            this.btnMovimentacao.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnMovimentacao.Size = new System.Drawing.Size(200, 40);
+            this.btnMovimentacao.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnMovimentacao.Size = new System.Drawing.Size(267, 49);
             this.btnMovimentacao.TabIndex = 6;
             this.btnMovimentacao.Text = "Movimentação";
             this.btnMovimentacao.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -174,10 +182,11 @@
             this.btnMecanicos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMecanicos.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnMecanicos.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnMecanicos.Location = new System.Drawing.Point(0, 200);
+            this.btnMecanicos.Location = new System.Drawing.Point(0, 245);
+            this.btnMecanicos.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnMecanicos.Name = "btnMecanicos";
-            this.btnMecanicos.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnMecanicos.Size = new System.Drawing.Size(200, 40);
+            this.btnMecanicos.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnMecanicos.Size = new System.Drawing.Size(267, 49);
             this.btnMecanicos.TabIndex = 5;
             this.btnMecanicos.Text = "Mecânicos";
             this.btnMecanicos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -193,10 +202,11 @@
             this.btnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExcluir.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnExcluir.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnExcluir.Location = new System.Drawing.Point(0, 160);
+            this.btnExcluir.Location = new System.Drawing.Point(0, 196);
+            this.btnExcluir.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnExcluir.Name = "btnExcluir";
-            this.btnExcluir.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnExcluir.Size = new System.Drawing.Size(200, 40);
+            this.btnExcluir.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnExcluir.Size = new System.Drawing.Size(267, 49);
             this.btnExcluir.TabIndex = 4;
             this.btnExcluir.Text = "Excluir";
             this.btnExcluir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -212,10 +222,11 @@
             this.btnEditar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnEditar.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnEditar.Location = new System.Drawing.Point(0, 120);
+            this.btnEditar.Location = new System.Drawing.Point(0, 147);
+            this.btnEditar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnEditar.Size = new System.Drawing.Size(200, 40);
+            this.btnEditar.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnEditar.Size = new System.Drawing.Size(267, 49);
             this.btnEditar.TabIndex = 4;
             this.btnEditar.Text = "Editar";
             this.btnEditar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -230,10 +241,11 @@
             this.btnNova.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNova.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnNova.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnNova.Location = new System.Drawing.Point(0, 80);
+            this.btnNova.Location = new System.Drawing.Point(0, 98);
+            this.btnNova.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnNova.Name = "btnNova";
-            this.btnNova.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnNova.Size = new System.Drawing.Size(200, 40);
+            this.btnNova.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnNova.Size = new System.Drawing.Size(267, 49);
             this.btnNova.TabIndex = 3;
             this.btnNova.Text = "Nova";
             this.btnNova.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -248,14 +260,16 @@
             this.btnInstrumentos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInstrumentos.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnInstrumentos.ForeColor = System.Drawing.Color.White;
-            this.btnInstrumentos.Location = new System.Drawing.Point(0, 40);
+            this.btnInstrumentos.Location = new System.Drawing.Point(0, 49);
+            this.btnInstrumentos.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnInstrumentos.Name = "btnInstrumentos";
-            this.btnInstrumentos.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnInstrumentos.Size = new System.Drawing.Size(200, 40);
+            this.btnInstrumentos.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnInstrumentos.Size = new System.Drawing.Size(267, 49);
             this.btnInstrumentos.TabIndex = 1;
             this.btnInstrumentos.Text = "Instrumentos";
             this.btnInstrumentos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnInstrumentos.UseVisualStyleBackColor = false;
+            this.btnInstrumentos.Click += new System.EventHandler(this.btnInstrumentos_Click);
             // 
             // btnProcurar
             // 
@@ -266,9 +280,10 @@
             this.btnProcurar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnProcurar.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnProcurar.Location = new System.Drawing.Point(0, 0);
+            this.btnProcurar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnProcurar.Name = "btnProcurar";
-            this.btnProcurar.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnProcurar.Size = new System.Drawing.Size(200, 40);
+            this.btnProcurar.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnProcurar.Size = new System.Drawing.Size(267, 49);
             this.btnProcurar.TabIndex = 0;
             this.btnProcurar.Text = "Procurar";
             this.btnProcurar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -283,10 +298,11 @@
             this.btnConfiguracoes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConfiguracoes.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnConfiguracoes.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnConfiguracoes.Location = new System.Drawing.Point(0, 481);
+            this.btnConfiguracoes.Location = new System.Drawing.Point(0, 592);
+            this.btnConfiguracoes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnConfiguracoes.Name = "btnConfiguracoes";
-            this.btnConfiguracoes.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnConfiguracoes.Size = new System.Drawing.Size(200, 40);
+            this.btnConfiguracoes.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
+            this.btnConfiguracoes.Size = new System.Drawing.Size(267, 49);
             this.btnConfiguracoes.TabIndex = 0;
             this.btnConfiguracoes.Text = "CONFIGURAÇÕES";
             this.btnConfiguracoes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -298,8 +314,9 @@
             this.panelSuperior.Controls.Add(this.lblTitulo);
             this.panelSuperior.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSuperior.Location = new System.Drawing.Point(0, 0);
+            this.panelSuperior.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelSuperior.Name = "panelSuperior";
-            this.panelSuperior.Size = new System.Drawing.Size(1264, 40);
+            this.panelSuperior.Size = new System.Drawing.Size(1685, 49);
             this.panelSuperior.TabIndex = 1;
             // 
             // lblTitulo
@@ -307,9 +324,10 @@
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             this.lblTitulo.ForeColor = System.Drawing.Color.White;
-            this.lblTitulo.Location = new System.Drawing.Point(12, 11);
+            this.lblTitulo.Location = new System.Drawing.Point(16, 14);
+            this.lblTitulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(287, 17);
+            this.lblTitulo.Size = new System.Drawing.Size(388, 23);
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "CONTROLE DE CALIBRAÇÃO DE INSTRUMENTOS";
             // 
@@ -320,18 +338,21 @@
             this.panelPrincipal.Controls.Add(this.txtBusca);
             this.panelPrincipal.Controls.Add(this.tabControlPrincipal);
             this.panelPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelPrincipal.Location = new System.Drawing.Point(200, 40);
+            this.panelPrincipal.Location = new System.Drawing.Point(267, 49);
+            this.panelPrincipal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelPrincipal.Name = "panelPrincipal";
-            this.panelPrincipal.Size = new System.Drawing.Size(1064, 521);
+            this.panelPrincipal.Size = new System.Drawing.Size(1418, 641);
             this.panelPrincipal.TabIndex = 2;
+            this.panelPrincipal.Paint += new System.Windows.Forms.PaintEventHandler(this.panelPrincipal_Paint);
             // 
             // lblBusca
             // 
             this.lblBusca.AutoSize = true;
             this.lblBusca.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblBusca.Location = new System.Drawing.Point(10, 15);
+            this.lblBusca.Location = new System.Drawing.Point(13, 18);
+            this.lblBusca.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblBusca.Name = "lblBusca";
-            this.lblBusca.Size = new System.Drawing.Size(58, 15);
+            this.lblBusca.Size = new System.Drawing.Size(67, 20);
             this.lblBusca.TabIndex = 2;
             this.lblBusca.Text = "Procurar:";
             this.lblBusca.Visible = false;
@@ -339,31 +360,36 @@
             // txtBusca
             // 
             this.txtBusca.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtBusca.Location = new System.Drawing.Point(75, 12);
+            this.txtBusca.Location = new System.Drawing.Point(100, 15);
+            this.txtBusca.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtBusca.Name = "txtBusca";
-            this.txtBusca.Size = new System.Drawing.Size(300, 23);
+            this.txtBusca.Size = new System.Drawing.Size(399, 27);
             this.txtBusca.TabIndex = 1;
             this.txtBusca.Visible = false;
             this.txtBusca.TextChanged += new System.EventHandler(this.txtBusca_TextChanged);
             // 
             // tabControlPrincipal
             // 
-            this.tabControlPrincipal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlPrincipal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControlPrincipal.Controls.Add(this.tabComCalibracao);
             this.tabControlPrincipal.Controls.Add(this.tabSemCalibracao);
-            this.tabControlPrincipal.Location = new System.Drawing.Point(10, 45);
+            this.tabControlPrincipal.Location = new System.Drawing.Point(13, 55);
+            this.tabControlPrincipal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabControlPrincipal.Name = "tabControlPrincipal";
             this.tabControlPrincipal.SelectedIndex = 0;
-            this.tabControlPrincipal.Size = new System.Drawing.Size(1042, 464);
+            this.tabControlPrincipal.Size = new System.Drawing.Size(1388, 571);
             this.tabControlPrincipal.TabIndex = 0;
             // 
             // tabComCalibracao
             // 
             this.tabComCalibracao.Controls.Add(this.dgvDados);
-            this.tabComCalibracao.Location = new System.Drawing.Point(4, 22);
+            this.tabComCalibracao.Location = new System.Drawing.Point(4, 25);
+            this.tabComCalibracao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabComCalibracao.Name = "tabComCalibracao";
-            this.tabComCalibracao.Padding = new System.Windows.Forms.Padding(3);
-            this.tabComCalibracao.Size = new System.Drawing.Size(1034, 438);
+            this.tabComCalibracao.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabComCalibracao.Size = new System.Drawing.Size(1380, 542);
             this.tabComCalibracao.TabIndex = 0;
             this.tabComCalibracao.Text = "Com Calibração";
             this.tabComCalibracao.UseVisualStyleBackColor = true;
@@ -375,17 +401,34 @@
             this.dgvDados.BackgroundColor = System.Drawing.Color.White;
             this.dgvDados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDados.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colInstrumento, this.colModelo, this.colPN, this.colSN, this.colIdentifSOD, this.colIdentifOficina,
-            this.colCertificado, this.colDataCalibracao, this.colDataVencimento, this.colSituacao, this.colExecutante,
-            this.colInstalada, this.colLocal, this.colSubLocalizacao, this.colFoto, this.colObservacoes, this.colMecanico, this.colCertificadoPDF});
+            this.colInstrumento,
+            this.colModelo,
+            this.colPN,
+            this.colSN,
+            this.colIdentifSOD,
+            this.colIdentifOficina,
+            this.colCertificado,
+            this.colDataCalibracao,
+            this.colDataVencimento,
+            this.colSituacao,
+            this.colExecutante,
+            this.colInstalada,
+            this.colLocal,
+            this.colSubLocalizacao,
+            this.colFoto,
+            this.colObservacoes,
+            this.colMecanico,
+            this.colCertificadoPDF});
             this.dgvDados.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvDados.Location = new System.Drawing.Point(3, 3);
+            this.dgvDados.Location = new System.Drawing.Point(4, 4);
+            this.dgvDados.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvDados.MultiSelect = false;
             this.dgvDados.Name = "dgvDados";
             this.dgvDados.ReadOnly = true;
             this.dgvDados.RowHeadersVisible = false;
+            this.dgvDados.RowHeadersWidth = 51;
             this.dgvDados.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDados.Size = new System.Drawing.Size(1028, 432);
+            this.dgvDados.Size = new System.Drawing.Size(1372, 534);
             this.dgvDados.TabIndex = 0;
             this.dgvDados.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDados_CellDoubleClick);
             this.dgvDados.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvDados_CellFormatting);
@@ -393,6 +436,7 @@
             // colInstrumento
             // 
             this.colInstrumento.HeaderText = "INSTRUMENTO / FERRAMENTA";
+            this.colInstrumento.MinimumWidth = 6;
             this.colInstrumento.Name = "colInstrumento";
             this.colInstrumento.ReadOnly = true;
             this.colInstrumento.Width = 180;
@@ -400,6 +444,7 @@
             // colModelo
             // 
             this.colModelo.HeaderText = "MODELO";
+            this.colModelo.MinimumWidth = 6;
             this.colModelo.Name = "colModelo";
             this.colModelo.ReadOnly = true;
             this.colModelo.Width = 80;
@@ -407,6 +452,7 @@
             // colPN
             // 
             this.colPN.HeaderText = "P/N";
+            this.colPN.MinimumWidth = 6;
             this.colPN.Name = "colPN";
             this.colPN.ReadOnly = true;
             this.colPN.Width = 80;
@@ -414,6 +460,7 @@
             // colSN
             // 
             this.colSN.HeaderText = "S/N";
+            this.colSN.MinimumWidth = 6;
             this.colSN.Name = "colSN";
             this.colSN.ReadOnly = true;
             this.colSN.Width = 80;
@@ -421,6 +468,7 @@
             // colIdentifSOD
             // 
             this.colIdentifSOD.HeaderText = "IDENTIF. SOD.";
+            this.colIdentifSOD.MinimumWidth = 6;
             this.colIdentifSOD.Name = "colIdentifSOD";
             this.colIdentifSOD.ReadOnly = true;
             this.colIdentifSOD.Width = 90;
@@ -428,6 +476,7 @@
             // colIdentifOficina
             // 
             this.colIdentifOficina.HeaderText = "IDENTIF. OFICINA";
+            this.colIdentifOficina.MinimumWidth = 6;
             this.colIdentifOficina.Name = "colIdentifOficina";
             this.colIdentifOficina.ReadOnly = true;
             this.colIdentifOficina.Width = 90;
@@ -435,6 +484,7 @@
             // colCertificado
             // 
             this.colCertificado.HeaderText = "CERTIFICADO";
+            this.colCertificado.MinimumWidth = 6;
             this.colCertificado.Name = "colCertificado";
             this.colCertificado.ReadOnly = true;
             this.colCertificado.Width = 80;
@@ -442,6 +492,7 @@
             // colDataCalibracao
             // 
             this.colDataCalibracao.HeaderText = "DATA DE CALIBRAÇÃO";
+            this.colDataCalibracao.MinimumWidth = 6;
             this.colDataCalibracao.Name = "colDataCalibracao";
             this.colDataCalibracao.ReadOnly = true;
             this.colDataCalibracao.Width = 90;
@@ -449,6 +500,7 @@
             // colDataVencimento
             // 
             this.colDataVencimento.HeaderText = "DATA DE VENCIMENTO";
+            this.colDataVencimento.MinimumWidth = 6;
             this.colDataVencimento.Name = "colDataVencimento";
             this.colDataVencimento.ReadOnly = true;
             this.colDataVencimento.Width = 90;
@@ -456,6 +508,7 @@
             // colSituacao
             // 
             this.colSituacao.HeaderText = "SITUAÇÃO";
+            this.colSituacao.MinimumWidth = 6;
             this.colSituacao.Name = "colSituacao";
             this.colSituacao.ReadOnly = true;
             this.colSituacao.Width = 90;
@@ -463,6 +516,7 @@
             // colExecutante
             // 
             this.colExecutante.HeaderText = "EXECUTANTE";
+            this.colExecutante.MinimumWidth = 6;
             this.colExecutante.Name = "colExecutante";
             this.colExecutante.ReadOnly = true;
             this.colExecutante.Width = 80;
@@ -470,6 +524,7 @@
             // colInstalada
             // 
             this.colInstalada.HeaderText = "INSTALADA NO EQUIPAMENTO?";
+            this.colInstalada.MinimumWidth = 6;
             this.colInstalada.Name = "colInstalada";
             this.colInstalada.ReadOnly = true;
             this.colInstalada.Width = 90;
@@ -477,6 +532,7 @@
             // colLocal
             // 
             this.colLocal.HeaderText = "LOCAL";
+            this.colLocal.MinimumWidth = 6;
             this.colLocal.Name = "colLocal";
             this.colLocal.ReadOnly = true;
             this.colLocal.Width = 90;
@@ -484,41 +540,51 @@
             // colSubLocalizacao
             // 
             this.colSubLocalizacao.HeaderText = "SUB.LOCALIZAÇÃO";
+            this.colSubLocalizacao.MinimumWidth = 6;
             this.colSubLocalizacao.Name = "colSubLocalizacao";
             this.colSubLocalizacao.ReadOnly = true;
+            this.colSubLocalizacao.Width = 125;
             // 
             // colFoto
             // 
             this.colFoto.HeaderText = "FOTO";
+            this.colFoto.MinimumWidth = 6;
             this.colFoto.Name = "colFoto";
             this.colFoto.ReadOnly = true;
+            this.colFoto.Width = 125;
             // 
             // colObservacoes
             // 
             this.colObservacoes.HeaderText = "OBSERVACOES";
+            this.colObservacoes.MinimumWidth = 6;
             this.colObservacoes.Name = "colObservacoes";
             this.colObservacoes.ReadOnly = true;
+            this.colObservacoes.Width = 125;
             // 
             // colMecanico
             // 
             this.colMecanico.HeaderText = "MECANICO";
+            this.colMecanico.MinimumWidth = 6;
             this.colMecanico.Name = "colMecanico";
             this.colMecanico.ReadOnly = true;
+            this.colMecanico.Width = 125;
             // 
             // colCertificadoPDF
             // 
             this.colCertificadoPDF.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colCertificadoPDF.HeaderText = "CERTIFICADO_PDF";
+            this.colCertificadoPDF.MinimumWidth = 6;
             this.colCertificadoPDF.Name = "colCertificadoPDF";
             this.colCertificadoPDF.ReadOnly = true;
             // 
             // tabSemCalibracao
             // 
             this.tabSemCalibracao.Controls.Add(this.dgvSemCalibracao);
-            this.tabSemCalibracao.Location = new System.Drawing.Point(4, 22);
+            this.tabSemCalibracao.Location = new System.Drawing.Point(4, 25);
+            this.tabSemCalibracao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabSemCalibracao.Name = "tabSemCalibracao";
-            this.tabSemCalibracao.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSemCalibracao.Size = new System.Drawing.Size(1034, 438);
+            this.tabSemCalibracao.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabSemCalibracao.Size = new System.Drawing.Size(1381, 542);
             this.tabSemCalibracao.TabIndex = 1;
             this.tabSemCalibracao.Text = "Sem Calibração";
             this.tabSemCalibracao.UseVisualStyleBackColor = true;
@@ -540,77 +606,99 @@
             this.colSemStatus,
             this.colSemMecanico});
             this.dgvSemCalibracao.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvSemCalibracao.Location = new System.Drawing.Point(3, 3);
+            this.dgvSemCalibracao.Location = new System.Drawing.Point(4, 4);
+            this.dgvSemCalibracao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvSemCalibracao.MultiSelect = false;
             this.dgvSemCalibracao.Name = "dgvSemCalibracao";
             this.dgvSemCalibracao.ReadOnly = true;
             this.dgvSemCalibracao.RowHeadersVisible = false;
+            this.dgvSemCalibracao.RowHeadersWidth = 51;
             this.dgvSemCalibracao.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSemCalibracao.Size = new System.Drawing.Size(1028, 432);
+            this.dgvSemCalibracao.Size = new System.Drawing.Size(1373, 534);
             this.dgvSemCalibracao.TabIndex = 0;
+            this.dgvSemCalibracao.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSemCalibracao_CellDoubleClick);
             // 
             // colSemDescricao
             // 
             this.colSemDescricao.HeaderText = "DESCRIÇÃO";
+            this.colSemDescricao.MinimumWidth = 6;
             this.colSemDescricao.Name = "colSemDescricao";
             this.colSemDescricao.ReadOnly = true;
+            this.colSemDescricao.Width = 125;
             // 
             // colSemCodigo
             // 
             this.colSemCodigo.HeaderText = "CÓDIGO";
+            this.colSemCodigo.MinimumWidth = 6;
             this.colSemCodigo.Name = "colSemCodigo";
             this.colSemCodigo.ReadOnly = true;
+            this.colSemCodigo.Width = 125;
             // 
             // colSemPN
             // 
             this.colSemPN.HeaderText = "PN";
+            this.colSemPN.MinimumWidth = 6;
             this.colSemPN.Name = "colSemPN";
             this.colSemPN.ReadOnly = true;
+            this.colSemPN.Width = 125;
             // 
             // colSemFabricante
             // 
             this.colSemFabricante.HeaderText = "FABRICANTE";
+            this.colSemFabricante.MinimumWidth = 6;
             this.colSemFabricante.Name = "colSemFabricante";
             this.colSemFabricante.ReadOnly = true;
+            this.colSemFabricante.Width = 125;
             // 
             // colSemLocal
             // 
             this.colSemLocal.HeaderText = "LOCAL";
+            this.colSemLocal.MinimumWidth = 6;
             this.colSemLocal.Name = "colSemLocal";
             this.colSemLocal.ReadOnly = true;
+            this.colSemLocal.Width = 125;
             // 
             // colSemCadastroLocal
             // 
             this.colSemCadastroLocal.HeaderText = "CADASTRO LOCAL";
+            this.colSemCadastroLocal.MinimumWidth = 6;
             this.colSemCadastroLocal.Name = "colSemCadastroLocal";
             this.colSemCadastroLocal.ReadOnly = true;
+            this.colSemCadastroLocal.Width = 125;
             // 
             // colSemCodLocal
             // 
             this.colSemCodLocal.HeaderText = "COD LOCAL";
+            this.colSemCodLocal.MinimumWidth = 6;
             this.colSemCodLocal.Name = "colSemCodLocal";
             this.colSemCodLocal.ReadOnly = true;
+            this.colSemCodLocal.Width = 125;
             // 
             // colSemStatus
             // 
             this.colSemStatus.HeaderText = "STATUS";
+            this.colSemStatus.MinimumWidth = 6;
             this.colSemStatus.Name = "colSemStatus";
             this.colSemStatus.ReadOnly = true;
+            this.colSemStatus.Width = 125;
             // 
             // colSemMecanico
             // 
             this.colSemMecanico.HeaderText = "MECANICO";
+            this.colSemMecanico.MinimumWidth = 6;
             this.colSemMecanico.Name = "colSemMecanico";
             this.colSemMecanico.ReadOnly = true;
+            this.colSemMecanico.Width = 125;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 561);
+            this.ClientSize = new System.Drawing.Size(1685, 690);
             this.Controls.Add(this.panelPrincipal);
             this.Controls.Add(this.panelEsquerdo);
             this.Controls.Add(this.panelSuperior);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CONTROLE DE CALIBRAÇÃO DE INSTRUMENTOS";
