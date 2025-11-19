@@ -2,15 +2,12 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-// Removemos o using Microsoft.Data.SqlClient porque não conecta mais direto!
 
 namespace WindowsFormsApp2
 {
     public partial class FormItemSemCalibracao : Form
     {
-        // Essa variável guarda os dados para o Form1 ler depois
         public object[] ItemDados { get; private set; }
-
         private long itemId = -1;
         private string pastaDasImagens;
         private string pastaDosCertificados;
@@ -43,24 +40,36 @@ namespace WindowsFormsApp2
         {
             if (linha.Tag != null) itemId = Convert.ToInt64(linha.Tag);
 
-            // Carrega apenas o que está no Grid
-            txtDescricao.Text = linha.Cells["colDescricao"].Value?.ToString();
-            txtCodigo.Text = linha.Cells["colCodigo"].Value?.ToString();
-            txtPN.Text = linha.Cells["colPN"].Value?.ToString();
-            txtFabricante.Text = linha.Cells["colFabricante"].Value?.ToString();
-            txtLocal.Text = linha.Cells["colLocal"].Value?.ToString();
-            txtCadastroLocal.Text = linha.Cells["colCadastroLocal"].Value?.ToString();
-            txtCodLocal.Text = linha.Cells["colCodLocal"].Value?.ToString();
+            // CORREÇÃO AQUI: Usei os nomes "colSem..." que estão no Form1
+            // Se alguma coluna não existir (ex: vinda de outro grid), usamos ?. para não quebrar
 
-            string status = linha.Cells["colStatus"].Value?.ToString();
+            txtDescricao.Text = ObterValorCelula(linha, "colSemDescricao");
+            txtCodigo.Text = ObterValorCelula(linha, "colSemCodigo");
+            txtPN.Text = ObterValorCelula(linha, "colSemPN");
+            txtFabricante.Text = ObterValorCelula(linha, "colSemFabricante");
+            txtLocal.Text = ObterValorCelula(linha, "colSemLocal");
+            txtCadastroLocal.Text = ObterValorCelula(linha, "colSemCadastroLocal");
+            txtCodLocal.Text = ObterValorCelula(linha, "colSemCodLocal");
+            txtMecanico.Text = ObterValorCelula(linha, "colSemMecanico");
+
+            string status = ObterValorCelula(linha, "colSemStatus");
             if (!string.IsNullOrEmpty(status) && cmbStatus.Items.Contains(status))
                 cmbStatus.SelectedItem = status;
 
-            // Nota: Mecânico não costuma vir nessa grid simples, mas se tiver, carrega
-            // txtMecanico.Text = ... 
+            // Tenta carregar foto/pdf se o grid tiver essas colunas escondidas (opcional)
+            // Mas no seu caso, o Form1 não salva o caminho no grid, ele salva no objeto da API.
+            // Então, na edição, a foto vai vir vazia a menos que você a selecione de novo,
+            // ou implementemos uma lógica para baixar a foto novamente (avançado).
+        }
 
-            // OBS: Não buscamos mais Foto/PDF no banco aqui (BuscarExtrasDoBanco foi removido).
-            // Se quiser editar a foto, o usuário deve selecionar o arquivo novamente por enquanto.
+        // Função auxiliar para evitar erro se o nome da coluna estiver errado
+        private string ObterValorCelula(DataGridViewRow linha, string nomeColuna)
+        {
+            if (linha.DataGridView.Columns.Contains(nomeColuna))
+            {
+                return linha.Cells[nomeColuna].Value?.ToString();
+            }
+            return ""; // Retorna vazio se a coluna não existir
         }
 
         private void btnSelecionarFoto_Click(object sender, EventArgs e)
@@ -77,7 +86,7 @@ namespace WindowsFormsApp2
                         File.Copy(ofd.FileName, destino, true);
 
                         picFoto.Image = Image.FromFile(destino);
-                        txtCaminhoFoto.Text = nomeUnico; // Guarda só o nome do arquivo
+                        txtCaminhoFoto.Text = nomeUnico;
                     }
                     catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                 }
@@ -97,7 +106,7 @@ namespace WindowsFormsApp2
                         string destino = Path.Combine(pastaDosCertificados, nomeUnico);
                         File.Copy(ofd.FileName, destino, true);
 
-                        txtCaminhoCertificado.Text = nomeUnico; // Guarda só o nome do arquivo
+                        txtCaminhoCertificado.Text = nomeUnico;
                     }
                     catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                 }
@@ -112,7 +121,6 @@ namespace WindowsFormsApp2
                 return;
             }
 
-            // Prepara o pacote de dados para o Form1 ler e enviar pra API
             ItemDados = new object[]
             {
                 txtDescricao.Text.Trim(),       // 0
@@ -124,8 +132,8 @@ namespace WindowsFormsApp2
                 txtCodLocal.Text.Trim(),        // 6
                 cmbStatus.SelectedItem?.ToString() ?? "", // 7
                 txtMecanico.Text.Trim(),        // 8
-                txtCaminhoFoto.Text.Trim(),     // 9  (Caminho local da imagem)
-                txtCaminhoCertificado.Text.Trim(), // 10 (Caminho local do PDF)
+                txtCaminhoFoto.Text.Trim(),     // 9
+                txtCaminhoCertificado.Text.Trim(), // 10
                 itemId                          // 11
             };
 
