@@ -6,10 +6,7 @@
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
@@ -17,6 +14,7 @@
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panelEsquerdo = new System.Windows.Forms.Panel();
             this.btnBuscaAvancada = new System.Windows.Forms.Button();
             this.btnRelatorios = new System.Windows.Forms.Button();
@@ -343,7 +341,6 @@
             this.panelPrincipal.Name = "panelPrincipal";
             this.panelPrincipal.Size = new System.Drawing.Size(1418, 641);
             this.panelPrincipal.TabIndex = 2;
-   
             // 
             // lblBusca
             // 
@@ -698,6 +695,7 @@
             this.Controls.Add(this.panelPrincipal);
             this.Controls.Add(this.panelEsquerdo);
             this.Controls.Add(this.panelSuperior);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

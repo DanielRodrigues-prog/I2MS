@@ -14,104 +14,138 @@ namespace WindowsFormsApp2
         private string pastaDasImagens = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagens");
         private string pastaDosCertificados = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Certificados");
 
-        // --- VARIÁVEIS DO DASHBOARD ---
+        // Variáveis do Dashboard
         private Label lblDashTotal;
         private Label lblDashVencidos;
         private Label lblDashAVencer;
         private Label lblDashEmprestados;
 
+        // Animação
+        private Timer timerAnimacao;
+
         public Form1(string usuarioLogado)
         {
             InitializeComponent();
 
-            this.usuarioAtual = usuarioLogado;
-            this.Text = $"CONTROLE DE CALIBRAÇÃO - Usuário: {this.usuarioAtual} (SISTEMA ONLINE)";
+            // 1. CONFIGURAÇÕES DE FLUIDEZ (Isso tira o aspecto "travado" do Windows antigo)
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
 
-            // Garante pastas locais
+            this.usuarioAtual = usuarioLogado;
+            this.Text = $"CONTROLE DE CALIBRAÇÃO - Usuário: {this.usuarioAtual}";
+
+            // Configura Pastas
             if (!Directory.Exists(pastaDasImagens)) Directory.CreateDirectory(pastaDasImagens);
             if (!Directory.Exists(pastaDosCertificados)) Directory.CreateDirectory(pastaDosCertificados);
 
             ConfigurarPermissoes();
+
+            // Prepara a animação (Começa invisível)
+            this.Opacity = 0;
+            timerAnimacao = new Timer();
+            timerAnimacao.Interval = 10; // Velocidade da fluidez (menor = mais rápido)
+            timerAnimacao.Tick += TimerAnimacao_Tick;
+        }
+
+        private void TimerAnimacao_Tick(object sender, EventArgs e)
+        {
+            if (this.Opacity < 1)
+                this.Opacity += 0.05; // Aumenta 5% a cada tick
+            else
+                timerAnimacao.Stop();
         }
 
         private void ConfigurarPermissoes()
         {
-            bool isAdmin = (usuarioAtual.ToLower() == "rodridae" || usuarioAtual.ToLower() == "admin");
+            bool isAdmin = (usuarioAtual.ToLower() == "matheus.machado" || usuarioAtual.ToLower() == "admin");
             btnEditar.Enabled = isAdmin;
             btnExcluir.Enabled = isAdmin;
             btnMecanicos.Enabled = isAdmin;
             btnNova.Enabled = isAdmin;
         }
 
-        // --- AQUI É O SEGREDO: CARREGA O DASHBOARD QUANDO A JANELA ABRE ---
         private async void Form1_Load(object sender, EventArgs e)
         {
-            ConfigurarDashboard(); // Desenha a tela colorida
-            await CarregarTudo();  // Baixa os dados
+            // 1. Desenha o Dashboard (Layout ajustado para cima)
+            ConfigurarDashboard();
+
+            // 2. Inicia animação visual
+            timerAnimacao.Start();
+
+            // 3. Carrega dados
+            await CarregarTudo();
         }
 
         private async Task CarregarTudo()
         {
-            lblTitulo.Text = "Sincronizando dados...";
+            lblTitulo.Text = "Sincronizando nuvem...";
             await CarregarDadosComCalibracao();
             await CarregarDadosSemCalibracao();
 
-            // Atualiza os números do dashboard depois de carregar os dados
             AtualizarNumerosDashboard();
 
-            lblTitulo.Text = "SISTEMA ONLINE (Azure)";
+            lblTitulo.Text = "FERRAMENTARIA ONLINE";
         }
 
         // =============================================================
-        //  DASHBOARD (VISUAL)
+        //  DASHBOARD (LAYOUT MAIS ALTO E MODERNO)
         // =============================================================
         private void ConfigurarDashboard()
         {
-            // 1. Cria a nova Aba
             TabPage tabDash = new TabPage("VISÃO GERAL");
-            tabDash.BackColor = Color.WhiteSmoke;
+            tabDash.BackColor = Color.White; // Fundo Branco Limpo
 
-            // Adiciona ela na primeira posição (0)
-            tabControlPrincipal.TabPages.Insert(0, tabDash);
-            tabControlPrincipal.SelectedIndex = 0; // Força abrir nela
+            // Adiciona na posição 0
+            if (tabControlPrincipal.TabPages.Count > 0) tabControlPrincipal.TabPages.Insert(0, tabDash);
+            else tabControlPrincipal.TabPages.Add(tabDash);
+            tabControlPrincipal.SelectedIndex = 0;
 
-            // 2. Título
-            Label lblTituloDash = new Label();
-            lblTituloDash.Text = "Resumo da Ferramentaria";
-            lblTituloDash.ForeColor = Color.DimGray;
-            lblTituloDash.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            lblTituloDash.AutoSize = true;
-            lblTituloDash.Location = new Point(20, 20);
-            tabDash.Controls.Add(lblTituloDash);
+            // --- TÍTULO (Mais para cima: Y=15) ---
+            Label lblTit = new Label();
+            lblTit.Text = "Resumo Geral";
+            lblTit.ForeColor = Color.FromArgb(64, 64, 64); // Cinza escuro elegante
+            lblTit.Font = new Font("Segoe UI", 16, FontStyle.Bold);
+            lblTit.AutoSize = true;
+            lblTit.Location = new Point(20, 15); // Bem no topo
+            tabDash.Controls.Add(lblTit);
 
-            // 3. Criação dos Cards (Posição X, Y)
-            lblDashTotal = CriarCard(tabDash, "Total de Itens", Color.RoyalBlue, 20, 70);
-            lblDashVencidos = CriarCard(tabDash, "Itens Vencidos", Color.Firebrick, 240, 70);
-            lblDashAVencer = CriarCard(tabDash, "A Vencer (30 dias)", Color.DarkOrange, 460, 70);
-            lblDashEmprestados = CriarCard(tabDash, "Emprestados", Color.SeaGreen, 680, 70);
+            // --- CARDS (Mais para cima: Y=60) ---
+            // Reduzi o espaçamento vertical para ficar mais compacto
+            int cardY = 60;
 
-            // Botão de Atualizar Manual
+            lblDashTotal = CriarCard(tabDash, "Total de Itens", Color.RoyalBlue, 20, cardY);
+            lblDashVencidos = CriarCard(tabDash, "Vencidos", Color.Firebrick, 240, cardY);
+            lblDashAVencer = CriarCard(tabDash, "A Vencer (30 dias)", Color.DarkOrange, 460, cardY);
+            lblDashEmprestados = CriarCard(tabDash, "Emprestados", Color.SeaGreen, 680, cardY);
+
+            // --- BOTÃO ATUALIZAR (Modernizado e posicionado logo abaixo) ---
             Button btnRefresh = new Button();
-            btnRefresh.Text = "Atualizar Agora";
-            btnRefresh.BackColor = Color.White;
-            btnRefresh.FlatStyle = FlatStyle.Flat;
-            btnRefresh.Size = new Size(120, 30);
-            btnRefresh.Location = new Point(20, 200);
+            btnRefresh.Text = "↻ Atualizar Dados";
+            btnRefresh.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            btnRefresh.BackColor = Color.WhiteSmoke;
+            btnRefresh.ForeColor = Color.Black;
+            btnRefresh.FlatStyle = FlatStyle.Flat; // Tira o 3D velho
+            btnRefresh.FlatAppearance.BorderColor = Color.Silver;
+            btnRefresh.Cursor = Cursors.Hand;
+            btnRefresh.Size = new Size(150, 35);
+            btnRefresh.Location = new Point(20, 180); // Logo abaixo dos cards
             btnRefresh.Click += (s, e) => { _ = CarregarTudo(); };
             tabDash.Controls.Add(btnRefresh);
         }
 
-        private Label CriarCard(TabPage aba, string titulo, Color cor, int x, int y)
+        private Label CriarCard(TabPage aba, string titulo, Color corFundo, int x, int y)
         {
             Panel pnl = new Panel();
             pnl.Size = new Size(200, 100);
             pnl.Location = new Point(x, y);
-            pnl.BackColor = cor;
+            pnl.BackColor = corFundo;
+            // Pequena sombra fake (opcional, removi borda para ficar flat)
+            pnl.BorderStyle = BorderStyle.None;
 
             Label lblTit = new Label();
             lblTit.Text = titulo;
             lblTit.ForeColor = Color.White;
-            lblTit.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            lblTit.Font = new Font("Segoe UI", 9, FontStyle.Bold);
             lblTit.Location = new Point(10, 10);
             lblTit.AutoSize = true;
             pnl.Controls.Add(lblTit);
@@ -119,8 +153,8 @@ namespace WindowsFormsApp2
             Label lblValor = new Label();
             lblValor.Text = "...";
             lblValor.ForeColor = Color.White;
-            lblValor.Font = new Font("Segoe UI", 24, FontStyle.Bold);
-            lblValor.Location = new Point(10, 35);
+            lblValor.Font = new Font("Segoe UI", 28, FontStyle.Bold); // Número maior
+            lblValor.Location = new Point(5, 35);
             lblValor.AutoSize = true;
             pnl.Controls.Add(lblValor);
 
@@ -139,7 +173,6 @@ namespace WindowsFormsApp2
 
             foreach (DataGridViewRow row in dgvDados.Rows)
             {
-                // Vencimento
                 var cellVenc = row.Cells["colDataVencimento"].Value?.ToString();
                 if (DateTime.TryParseExact(cellVenc, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
                 {
@@ -148,7 +181,6 @@ namespace WindowsFormsApp2
                     else if (dias <= 30) aVencer++;
                 }
 
-                // Empréstimo
                 var cellMec = row.Cells["colMecanico"].Value?.ToString();
                 if (!string.IsNullOrEmpty(cellMec)) emprestados++;
             }
@@ -177,7 +209,7 @@ namespace WindowsFormsApp2
         }
 
         // =============================================================
-        //  CARREGAMENTO (GET)
+        //  CARREGAMENTO API
         // =============================================================
         private async Task CarregarDadosComCalibracao()
         {
@@ -199,8 +231,9 @@ namespace WindowsFormsApp2
                     }
                 }
 
+                // Alerta popup opcional (se quiser pode comentar)
                 if (vencer.Count > 0 && tabControlPrincipal.SelectedTab == tabComCalibracao)
-                    MessageBox.Show("Vencimentos Próximos:\n" + string.Join("\n", vencer), "Alerta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Vencimentos Próximos:\n" + string.Join("\n", vencer), "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex) { MessageBox.Show("Erro ao carregar Com Calibração: " + ex.Message); }
         }
@@ -214,7 +247,6 @@ namespace WindowsFormsApp2
                 foreach (var r in l)
                 {
                     string f = SalvarArquivoLocal(r.Foto, pastaDasImagens, ".jpg");
-                    string p = SalvarArquivoLocal(r.CertificadoPDF, pastaDosCertificados, ".pdf");
                     dgvSemCalibracao.Rows.Add(r.Descricao, r.Codigo, r.PN, r.Fabricante, r.Local, r.CadastroLocal, r.CodLocal, r.Status, r.Mecanico);
                     dgvSemCalibracao.Rows[dgvSemCalibracao.Rows.Count - 1].Tag = r.ID;
                 }
@@ -349,48 +381,30 @@ namespace WindowsFormsApp2
 
         private async void btnExcluir_Click(object sender, EventArgs e)
         {
-            if (tabControlPrincipal.SelectedTab == tabComCalibracao)
+            if (MessageBox.Show("Tem certeza que deseja excluir?", "Excluir", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            if (tabControlPrincipal.SelectedTab == tabComCalibracao && dgvDados.SelectedRows.Count > 0)
             {
-                if (dgvDados.SelectedRows.Count > 0)
-                {
-                    if (MessageBox.Show("Excluir?", "Confirma", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        try { await ApiService.DelCom(Convert.ToInt32(dgvDados.SelectedRows[0].Tag)); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
-                    }
-                }
+                try { await ApiService.DelCom(Convert.ToInt32(dgvDados.SelectedRows[0].Tag)); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
-            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao)
+            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao && dgvSemCalibracao.SelectedRows.Count > 0)
             {
-                if (dgvSemCalibracao.SelectedRows.Count > 0)
-                {
-                    if (MessageBox.Show("Excluir?", "Confirma", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        try { await ApiService.DelSem(Convert.ToInt32(dgvSemCalibracao.SelectedRows[0].Tag)); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
-                    }
-                }
+                try { await ApiService.DelSem(Convert.ToInt32(dgvSemCalibracao.SelectedRows[0].Tag)); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
 
-        // --- VISUAL / NAVEGAÇÃO ---
+        // --- NAVEGAÇÃO ---
         private void btnMovimentacao_Click(object sender, EventArgs e) { new FormMovimentacao().ShowDialog(); _ = CarregarTudo(); }
         private void btnMecanicos_Click(object sender, EventArgs e) { new FormMecanicos().ShowDialog(); }
         private void btnRelatorios_Click(object sender, EventArgs e) { MessageBox.Show("Em breve."); }
         private void btnBuscaAvancada_Click(object sender, EventArgs e) { }
         private void btnFiltrar_Click(object sender, EventArgs e) { }
         private void btnInstrumentos_Click(object sender, EventArgs e) { if (tabControlPrincipal.TabCount > 1) tabControlPrincipal.SelectedIndex = 1; }
-
-        private void btnProcurar_Click(object sender, EventArgs e)
-        {
-            txtBusca.Visible = !txtBusca.Visible;
-            lblBusca.Visible = !lblBusca.Visible;
-            if (txtBusca.Visible) txtBusca.Focus(); else txtBusca.Text = "";
-        }
+        private void btnProcurar_Click(object sender, EventArgs e) { txtBusca.Visible = !txtBusca.Visible; lblBusca.Visible = !lblBusca.Visible; if (txtBusca.Visible) txtBusca.Focus(); }
 
         private void txtBusca_TextChanged(object sender, EventArgs e)
         {
             string t = txtBusca.Text.ToLower();
-            if (tabControlPrincipal.SelectedIndex == 0) return; // Não busca no dashboard
-
+            if (tabControlPrincipal.SelectedIndex == 0) return;
             DataGridView dgv = (tabControlPrincipal.SelectedTab == tabComCalibracao) ? dgvDados : dgvSemCalibracao;
             string c = (tabControlPrincipal.SelectedTab == tabComCalibracao) ? "colInstrumento" : "colSemDescricao";
             foreach (DataGridViewRow r in dgv.Rows) { if (!r.IsNewRow) r.Visible = (r.Cells[c].Value != null && r.Cells[c].Value.ToString().ToLower().Contains(t)); }
@@ -414,29 +428,7 @@ namespace WindowsFormsApp2
             }
         }
 
-        // DUPLO CLIQUE
-        private void dgvDados_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                FormDetalhes f = new FormDetalhes(dgvDados.Rows[e.RowIndex]);
-                f.ShowDialog();
-            }
-        }
-
-        private void dgvSemCalibracao_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                btnEditar_Click(sender, e);
-            }
-        }
-
-        private void btnImportarCSV_Click(object sender, EventArgs e)
-        {
-            // Método deixado vazio ou removido no designer.
-            // Como removemos o botão no Designer.cs, esse método pode ficar órfão sem problemas
-            // ou você pode apagá-lo.
-        }
+        private void dgvDados_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) new FormDetalhes(dgvDados.Rows[e.RowIndex]).ShowDialog(); }
+        private void dgvSemCalibracao_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) btnEditar_Click(sender, e); }
     }
 }
