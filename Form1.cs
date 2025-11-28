@@ -57,7 +57,22 @@ namespace WindowsFormsApp2
 
         private void ConfigurarPermissoes()
         {
-            bool isAdmin = (usuarioAtual.ToLower() == "matheus.machado" || usuarioAtual.ToLower() == "admin");
+            // --- LISTA DE ADMINISTRADORES ---
+            // Adicione aqui os usuários do Windows (login) que terão acesso total.
+            // Dica: Escreva tudo em letras minúsculas para garantir.
+            List<string> listaAdmins = new List<string>
+            {
+                "rodridae",
+                "daniel rodrigues",       // Exemplo: Adicione você
+                "matheus.machado",   // Exemplo
+                "dinomarks.carvalho",    // Exemplo
+                
+            };
+
+            // Verifica se o usuário logado está dentro da lista acima
+            bool isAdmin = listaAdmins.Contains(usuarioAtual.ToLower());
+
+            // Aplica as permissões
             btnEditar.Enabled = isAdmin;
             btnExcluir.Enabled = isAdmin;
             btnMecanicos.Enabled = isAdmin;
