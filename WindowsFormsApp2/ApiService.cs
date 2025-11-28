@@ -113,9 +113,17 @@ namespace WindowsFormsApp2
             var s = await client.GetStringAsync($"{BaseUrl}/api/Movimentacao/StatusFerramenta/{id}");
             return JsonConvert.DeserializeObject<FerrInfo>(s);
         }
-        public static async Task<string> RegMov(string tipo, string idFerr, string idMec, string nomeMec)
+        public static async Task<string> RegMov(string tipo, string idFerr, string idMec, string nomeMec, string aeronave, string usuarioLogado)
         {
-            var d = new { Tipo = tipo, IdFerramenta = idFerr, IdMecanico = idMec, NomeMecanico = nomeMec };
+            var d = new
+            {
+                Tipo = tipo,
+                IdFerramenta = idFerr,
+                IdMecanico = idMec,
+                NomeMecanico = nomeMec,
+                Aeronave = aeronave,
+                UsuarioLogado = usuarioLogado
+            };
             var c = new StringContent(JsonConvert.SerializeObject(d), Encoding.UTF8, "application/json");
             var r = await client.PostAsync($"{BaseUrl}/api/Movimentacao/Registrar", c);
             if (r.IsSuccessStatusCode) return "OK";

@@ -14,38 +14,201 @@ namespace WindowsFormsApp2
         private string pastaDasImagens = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Imagens");
         private string pastaDosCertificados = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Certificados");
 
+        // Variáveis do Dashboard
+        private Label lblDashTotal;
+        private Label lblDashVencidos;
+        private Label lblDashAVencer;
+        private Label lblDashEmprestados;
+
+        // Animação
+        private Timer timerAnimacao;
+
         public Form1(string usuarioLogado)
         {
             InitializeComponent();
-            this.usuarioAtual = usuarioLogado;
-            this.Text = $"CONTROLE DE CALIBRAÇÃO - Usuário: {this.usuarioAtual} (SISTEMA ONLINE)";
 
+            // 1. CONFIGURAÇÕES DE FLUIDEZ (Isso tira o aspecto "travado" do Windows antigo)
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+
+            this.usuarioAtual = usuarioLogado;
+            this.Text = $"CONTROLE DE CALIBRAÇÃO - Usuário: {this.usuarioAtual}";
+
+            // Configura Pastas
             if (!Directory.Exists(pastaDasImagens)) Directory.CreateDirectory(pastaDasImagens);
             if (!Directory.Exists(pastaDosCertificados)) Directory.CreateDirectory(pastaDosCertificados);
 
             ConfigurarPermissoes();
+
+            // Prepara a animação (Começa invisível)
+            this.Opacity = 0;
+            timerAnimacao = new Timer();
+            timerAnimacao.Interval = 10; // Velocidade da fluidez (menor = mais rápido)
+            timerAnimacao.Tick += TimerAnimacao_Tick;
+        }
+
+        private void TimerAnimacao_Tick(object sender, EventArgs e)
+        {
+            if (this.Opacity < 1)
+                this.Opacity += 0.05; // Aumenta 5% a cada tick
+            else
+                timerAnimacao.Stop();
         }
 
         private void ConfigurarPermissoes()
         {
-            bool isAdmin = (usuarioAtual.ToLower() == "matheus.machado" || usuarioAtual.ToLower() == "admin");
+            // --- LISTA DE ADMINISTRADORES ---
+            // Adicione aqui os usuários do Windows (login) que terão acesso total.
+            // Dica: Escreva tudo em letras minúsculas para garantir.
+            List<string> listaAdmins = new List<string>
+            {
+                "rodridae",
+                "daniel rodrigues",       // Exemplo: Adicione você
+                "matheus.machado",   // Exemplo
+                "dinomarks.carvalho",    // Exemplo
+                
+            };
+
+            // Verifica se o usuário logado está dentro da lista acima
+            bool isAdmin = listaAdmins.Contains(usuarioAtual.ToLower());
+
+            // Aplica as permissões
             btnEditar.Enabled = isAdmin;
             btnExcluir.Enabled = isAdmin;
             btnMecanicos.Enabled = isAdmin;
             btnNova.Enabled = isAdmin;
         }
 
-        private async void Form1_Load(object sender, EventArgs e) { await CarregarTudo(); }
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            // 1. Desenha o Dashboard (Layout ajustado para cima)
+            ConfigurarDashboard();
+
+            // 2. Inicia animação visual
+            timerAnimacao.Start();
+
+            // 3. Carrega dados
+            await CarregarTudo();
+        }
 
         private async Task CarregarTudo()
         {
-            lblTitulo.Text = "Sincronizando...";
+            lblTitulo.Text = "Sincronizando nuvem...";
             await CarregarDadosComCalibracao();
             await CarregarDadosSemCalibracao();
-            lblTitulo.Text = "SISTEMA ONLINE (Azure)";
+
+            AtualizarNumerosDashboard();
+
+            lblTitulo.Text = "FERRAMENTARIA ONLINE";
         }
 
-        // --- ARQUIVOS ---
+        // =============================================================
+        //  DASHBOARD (LAYOUT MAIS ALTO E MODERNO)
+        // =============================================================
+        private void ConfigurarDashboard()
+        {
+            TabPage tabDash = new TabPage("VISÃO GERAL");
+            tabDash.BackColor = Color.White; // Fundo Branco Limpo
+
+            // Adiciona na posição 0
+            if (tabControlPrincipal.TabPages.Count > 0) tabControlPrincipal.TabPages.Insert(0, tabDash);
+            else tabControlPrincipal.TabPages.Add(tabDash);
+            tabControlPrincipal.SelectedIndex = 0;
+
+            // --- TÍTULO (Mais para cima: Y=15) ---
+            Label lblTit = new Label();
+            lblTit.Text = "Resumo Geral";
+            lblTit.ForeColor = Color.FromArgb(64, 64, 64); // Cinza escuro elegante
+            lblTit.Font = new Font("Segoe UI", 16, FontStyle.Bold);
+            lblTit.AutoSize = true;
+            lblTit.Location = new Point(20, 15); // Bem no topo
+            tabDash.Controls.Add(lblTit);
+
+            // --- CARDS (Mais para cima: Y=60) ---
+            // Reduzi o espaçamento vertical para ficar mais compacto
+            int cardY = 60;
+
+            lblDashTotal = CriarCard(tabDash, "Total de Itens", Color.RoyalBlue, 20, cardY);
+            lblDashVencidos = CriarCard(tabDash, "Vencidos", Color.Firebrick, 240, cardY);
+            lblDashAVencer = CriarCard(tabDash, "A Vencer (30 dias)", Color.DarkOrange, 460, cardY);
+            lblDashEmprestados = CriarCard(tabDash, "Emprestados", Color.SeaGreen, 680, cardY);
+
+            // --- BOTÃO ATUALIZAR (Modernizado e posicionado logo abaixo) ---
+            Button btnRefresh = new Button();
+            btnRefresh.Text = "↻ Atualizar Dados";
+            btnRefresh.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            btnRefresh.BackColor = Color.WhiteSmoke;
+            btnRefresh.ForeColor = Color.Black;
+            btnRefresh.FlatStyle = FlatStyle.Flat; // Tira o 3D velho
+            btnRefresh.FlatAppearance.BorderColor = Color.Silver;
+            btnRefresh.Cursor = Cursors.Hand;
+            btnRefresh.Size = new Size(150, 35);
+            btnRefresh.Location = new Point(20, 180); // Logo abaixo dos cards
+            btnRefresh.Click += (s, e) => { _ = CarregarTudo(); };
+            tabDash.Controls.Add(btnRefresh);
+        }
+
+        private Label CriarCard(TabPage aba, string titulo, Color corFundo, int x, int y)
+        {
+            Panel pnl = new Panel();
+            pnl.Size = new Size(200, 100);
+            pnl.Location = new Point(x, y);
+            pnl.BackColor = corFundo;
+            // Pequena sombra fake (opcional, removi borda para ficar flat)
+            pnl.BorderStyle = BorderStyle.None;
+
+            Label lblTit = new Label();
+            lblTit.Text = titulo;
+            lblTit.ForeColor = Color.White;
+            lblTit.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            lblTit.Location = new Point(10, 10);
+            lblTit.AutoSize = true;
+            pnl.Controls.Add(lblTit);
+
+            Label lblValor = new Label();
+            lblValor.Text = "...";
+            lblValor.ForeColor = Color.White;
+            lblValor.Font = new Font("Segoe UI", 28, FontStyle.Bold); // Número maior
+            lblValor.Location = new Point(5, 35);
+            lblValor.AutoSize = true;
+            pnl.Controls.Add(lblValor);
+
+            aba.Controls.Add(pnl);
+            return lblValor;
+        }
+
+        private void AtualizarNumerosDashboard()
+        {
+            if (dgvDados == null || dgvDados.Rows.Count == 0) return;
+
+            int total = dgvDados.Rows.Count;
+            int vencidos = 0;
+            int aVencer = 0;
+            int emprestados = 0;
+
+            foreach (DataGridViewRow row in dgvDados.Rows)
+            {
+                var cellVenc = row.Cells["colDataVencimento"].Value?.ToString();
+                if (DateTime.TryParseExact(cellVenc, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+                {
+                    int dias = (int)(dt.Date - DateTime.Today).TotalDays;
+                    if (dias <= 0) vencidos++;
+                    else if (dias <= 30) aVencer++;
+                }
+
+                var cellMec = row.Cells["colMecanico"].Value?.ToString();
+                if (!string.IsNullOrEmpty(cellMec)) emprestados++;
+            }
+
+            if (lblDashTotal != null) lblDashTotal.Text = total.ToString();
+            if (lblDashVencidos != null) lblDashVencidos.Text = vencidos.ToString();
+            if (lblDashAVencer != null) lblDashAVencer.Text = aVencer.ToString();
+            if (lblDashEmprestados != null) lblDashEmprestados.Text = emprestados.ToString();
+        }
+
+        // =============================================================
+        //  ARQUIVOS
+        // =============================================================
         private string SalvarArquivoLocal(byte[] dados, string pasta, string extensao)
         {
             if (dados == null || dados.Length == 0) return "";
@@ -60,7 +223,9 @@ namespace WindowsFormsApp2
             return null;
         }
 
-        // --- CARREGAR DADOS ---
+        // =============================================================
+        //  CARREGAMENTO API
+        // =============================================================
         private async Task CarregarDadosComCalibracao()
         {
             dgvDados.Rows.Clear();
@@ -80,7 +245,10 @@ namespace WindowsFormsApp2
                         if (d > 0 && d <= 45) vencer.Add($"{r.InstrumentoNome} ({d} dias)");
                     }
                 }
-                if (vencer.Count > 0 && tabControlPrincipal.SelectedTab == tabComCalibracao) MessageBox.Show("Vencimentos:\n" + string.Join("\n", vencer));
+
+                // Alerta popup opcional (se quiser pode comentar)
+                if (vencer.Count > 0 && tabControlPrincipal.SelectedTab == tabComCalibracao)
+                    MessageBox.Show("Vencimentos Próximos:\n" + string.Join("\n", vencer), "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex) { MessageBox.Show("Erro ao carregar Com Calibração: " + ex.Message); }
         }
@@ -101,8 +269,9 @@ namespace WindowsFormsApp2
             catch (Exception ex) { MessageBox.Show("Erro ao carregar Sem Calibração: " + ex.Message); }
         }
 
-        // --- BOTÕES CRUD ---
-
+        // =============================================================
+        //  BOTÕES CRUD
+        // =============================================================
         private async void btnNova_Click(object sender, EventArgs e)
         {
             if (tabControlPrincipal.SelectedTab == tabComCalibracao)
@@ -131,10 +300,10 @@ namespace WindowsFormsApp2
                         Mecanico = d[16]?.ToString(),
                         CertificadoPDF = LerArquivoLocal(d[17]?.ToString(), pastaDosCertificados)
                     };
-                    try { await ApiService.PostCom(i); await CarregarDadosComCalibracao(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
+                    try { await ApiService.PostCom(i); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                 }
             }
-            else
+            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao)
             {
                 FormItemSemCalibracao f = new FormItemSemCalibracao();
                 if (f.ShowDialog() == DialogResult.OK)
@@ -154,7 +323,7 @@ namespace WindowsFormsApp2
                         Foto = LerArquivoLocal(d[9]?.ToString(), pastaDasImagens),
                         CertificadoPDF = LerArquivoLocal(d[10]?.ToString(), pastaDosCertificados)
                     };
-                    try { await ApiService.PostSem(i); await CarregarDadosSemCalibracao(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
+                    try { await ApiService.PostSem(i); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                 }
             }
         }
@@ -191,12 +360,11 @@ namespace WindowsFormsApp2
                             Mecanico = d[16]?.ToString(),
                             CertificadoPDF = LerArquivoLocal(d[17]?.ToString(), pastaDosCertificados)
                         };
-                        try { await ApiService.PutCom(i.ID, i); await CarregarDadosComCalibracao(); MessageBox.Show("Atualizado!"); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
+                        try { await ApiService.PutCom(i.ID, i); await CarregarTudo(); MessageBox.Show("Atualizado!"); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                     }
                 }
-                else MessageBox.Show("Selecione um item.");
             }
-            else
+            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao)
             {
                 if (dgvSemCalibracao.SelectedRows.Count > 0)
                 {
@@ -220,58 +388,41 @@ namespace WindowsFormsApp2
                             Foto = LerArquivoLocal(d[9]?.ToString(), pastaDasImagens),
                             CertificadoPDF = LerArquivoLocal(d[10]?.ToString(), pastaDosCertificados)
                         };
-                        try { await ApiService.PutSem(i.ID, i); await CarregarDadosSemCalibracao(); MessageBox.Show("Atualizado!"); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
+                        try { await ApiService.PutSem(i.ID, i); await CarregarTudo(); MessageBox.Show("Atualizado!"); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                     }
                 }
-                else MessageBox.Show("Selecione um item.");
             }
         }
 
         private async void btnExcluir_Click(object sender, EventArgs e)
         {
-            if (tabControlPrincipal.SelectedTab == tabComCalibracao)
+            if (MessageBox.Show("Tem certeza que deseja excluir?", "Excluir", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            if (tabControlPrincipal.SelectedTab == tabComCalibracao && dgvDados.SelectedRows.Count > 0)
             {
-                if (dgvDados.SelectedRows.Count > 0)
-                {
-                    if (MessageBox.Show("Excluir?", "Confirma", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        try { await ApiService.DelCom(Convert.ToInt32(dgvDados.SelectedRows[0].Tag)); await CarregarDadosComCalibracao(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
-                    }
-                }
+                try { await ApiService.DelCom(Convert.ToInt32(dgvDados.SelectedRows[0].Tag)); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
-            else
+            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao && dgvSemCalibracao.SelectedRows.Count > 0)
             {
-                if (dgvSemCalibracao.SelectedRows.Count > 0)
-                {
-                    if (MessageBox.Show("Excluir?", "Confirma", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        try { await ApiService.DelSem(Convert.ToInt32(dgvSemCalibracao.SelectedRows[0].Tag)); await CarregarDadosSemCalibracao(); } catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
-                    }
-                }
+                try { await ApiService.DelSem(Convert.ToInt32(dgvSemCalibracao.SelectedRows[0].Tag)); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
 
-        // --- VISUAL / NAVEGAÇÃO ---
-        private void btnMovimentacao_Click(object sender, EventArgs e) { new FormMovimentacao().ShowDialog(); _ = CarregarDadosComCalibracao(); }
+        // --- NAVEGAÇÃO ---
+        private void btnMovimentacao_Click(object sender, EventArgs e) { new FormMovimentacao().ShowDialog(); _ = CarregarTudo(); }
         private void btnMecanicos_Click(object sender, EventArgs e) { new FormMecanicos().ShowDialog(); }
         private void btnRelatorios_Click(object sender, EventArgs e) { MessageBox.Show("Em breve."); }
         private void btnBuscaAvancada_Click(object sender, EventArgs e) { }
         private void btnFiltrar_Click(object sender, EventArgs e) { }
-        private void btnInstrumentos_Click(object sender, EventArgs e) { }
-
-        private void btnProcurar_Click(object sender, EventArgs e)
-        {
-            txtBusca.Visible = !txtBusca.Visible;
-            lblBusca.Visible = !lblBusca.Visible;
-            if (txtBusca.Visible) txtBusca.Focus(); else txtBusca.Text = "";
-        }
+        private void btnInstrumentos_Click(object sender, EventArgs e) { if (tabControlPrincipal.TabCount > 1) tabControlPrincipal.SelectedIndex = 1; }
+        private void btnProcurar_Click(object sender, EventArgs e) { txtBusca.Visible = !txtBusca.Visible; lblBusca.Visible = !lblBusca.Visible; if (txtBusca.Visible) txtBusca.Focus(); }
 
         private void txtBusca_TextChanged(object sender, EventArgs e)
         {
             string t = txtBusca.Text.ToLower();
-            DataGridView d = (tabControlPrincipal.SelectedTab == tabComCalibracao) ? dgvDados : dgvSemCalibracao;
+            if (tabControlPrincipal.SelectedIndex == 0) return;
+            DataGridView dgv = (tabControlPrincipal.SelectedTab == tabComCalibracao) ? dgvDados : dgvSemCalibracao;
             string c = (tabControlPrincipal.SelectedTab == tabComCalibracao) ? "colInstrumento" : "colSemDescricao";
-            foreach (DataGridViewRow r in d.Rows) { if (!r.IsNewRow) r.Visible = (r.Cells[c].Value != null && r.Cells[c].Value.ToString().ToLower().Contains(t)); }
+            foreach (DataGridViewRow r in dgv.Rows) { if (!r.IsNewRow) r.Visible = (r.Cells[c].Value != null && r.Cells[c].Value.ToString().ToLower().Contains(t)); }
         }
 
         private void dgvDados_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -292,33 +443,7 @@ namespace WindowsFormsApp2
             }
         }
 
-        // --- DUPLO CLIQUE NAS GRIDS ---
-
-        // Aba Com Calibração
-        private void dgvDados_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                // Abre form de detalhes (apenas leitura/visualização rica)
-                FormDetalhes f = new FormDetalhes(dgvDados.Rows[e.RowIndex]);
-                f.ShowDialog();
-            }
-        }
-
-        // Aba Sem Calibração (NOVO)
-        private void dgvSemCalibracao_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                // Como "Sem Calibração" não tem form de Detalhes específico,
-                // vamos chamar a função de Editar para ver as informações.
-                btnEditar_Click(sender, e);
-            }
-        }
-
-        private void panelPrincipal_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        private void dgvDados_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) new FormDetalhes(dgvDados.Rows[e.RowIndex]).ShowDialog(); }
+        private void dgvSemCalibracao_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) btnEditar_Click(sender, e); }
     }
 }
