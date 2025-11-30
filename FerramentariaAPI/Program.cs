@@ -1,34 +1,47 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// ? SEGURANÇA: Carregamento de senha (Hardcoded permitido)
+// ? SEGURANÇA: Carregar variáveis de ambiente (OBRIGATÓRIO)
+// Se a senha está em variável de ambiente, substitui no connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
-// Se não tiver variável de ambiente, tenta usar o placeholder do appsettings
-if (!string.IsNullOrEmpty(dbPassword))
+// ?? VALIDAÇÃO IMPORTANTE
+if (string.IsNullOrEmpty(dbPassword))
 {
-    // ? Existe variável de ambiente - usa ela (Azure, Docker, etc)
-    if (connectionString?.Contains("{DB_PASSWORD}") == true)
-  {
-     connectionString = connectionString.Replace("{DB_PASSWORD}", dbPassword);
-        Console.WriteLine("? Senha carregada de: Environment Variable (DB_PASSWORD)");
-    }
-    builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
-}
-else
-{
-    // ?? Sem variável - usa o que está no appsettings.json
     if (builder.Environment.IsProduction())
-    {
-        Console.WriteLine("??  AVISO: DB_PASSWORD não configurada em Produção!");
-  Console.WriteLine("   Azure: Configure DB_PASSWORD em App Service ? Configuration");
-    Console.WriteLine("   Usando connection string do appsettings.json...");
+ {
+        // Em produção, FALHA COM ERRO
+        throw new InvalidOperationException(
+        "? ERRO CRÍTICO: Variável de ambiente DB_PASSWORD não configurada!\n" +
+            "Configure no servidor/container ANTES de rodar a aplicação.\n" +
+        "Azure: App Service ? Configuration ? New Setting (DB_PASSWORD)\n" +
+            "Docker: docker run -e DB_PASSWORD=\"sua_senha\" ...\n" +
+   "Local: $env:DB_PASSWORD=\"sua_senha\"");
     }
     else
     {
-   Console.WriteLine("??  INFO: Usando connection string do appsettings.json");
-        Console.WriteLine("   (Se quiser usar variável: $env:DB_PASSWORD=\"sua_senha\")");
+     // Em desenvolvimento, AVISA mas permite continuar (com CUIDADO!)
+        Console.WriteLine("??  AVISO: DB_PASSWORD não configurada em desenvolvimento!");
+        Console.WriteLine("   Use: $env:DB_PASSWORD=\"sua_senha_aqui\"");
+        Console.WriteLine("   A connection string está usando placeholder {DB_PASSWORD}");
+        Console.WriteLine("   Se o banco não conectar, configure a variável de ambiente.");
+    }
 }
+else
+{
+    // ? Senha existe - substitui o placeholder
+    if (connectionString?.Contains("{DB_PASSWORD}") == true)
+    {
+      connectionString = connectionString.Replace("{DB_PASSWORD}", dbPassword);
+      Console.WriteLine("? Senha DB_PASSWORD carregada com sucesso");
+    }
+    else
+    {
+        Console.WriteLine("??  Connection string não tem placeholder {DB_PASSWORD}");
+    }
+    
+    // Atualiza a configuração
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 }
 
 // Add services to the container.
