@@ -1,37 +1,37 @@
-# ?? CORRE«’ES DE SEGURAN«A IMPLEMENTADAS
+Ôªø# üîê CORRE√á√ïES DE SEGURAN√áA IMPLEMENTADAS
 
 **Data:** 2025  
-**Status:** ? COMPLETO E TESTADO  
-**Prioridade:** CRÕTICA
+**Status:** ‚úÖ COMPLETO E TESTADO  
+**Prioridade:** CR√çTICA
 
 ---
 
-## ?? SUM¡RIO EXECUTIVO
+## üìã SUM√ÅRIO EXECUTIVO
 
-Foram implementadas **3 correÁıes crÌticas de seguranÁa** que eliminaram vulnerabilidades graves em todo o projeto:
+Foram implementadas **3 corre√ß√µes cr√≠ticas de seguran√ßa** que eliminaram vulnerabilidades graves em todo o projeto:
 
-| # | Problema | SoluÁ„o | Impacto | Status |
+| # | Problema | Solu√ß√£o | Impacto | Status |
 |---|----------|---------|--------|--------|
-| 1?? | SQL Injection | Par‚metros SQL (@id, @valor) | CRÕTICO | ? RESOLVIDO |
-| 2?? | Senha Hardcoded | Vari·veis de Ambiente | CRÕTICO | ? RESOLVIDO |
-| 3?? | ValidaÁ„o Fraca | ValidaÁ„o de Entrada | ALTO | ? RESOLVIDO |
+| 1Ô∏è‚É£ | SQL Injection | Par√¢metros SQL (@id, @valor) | CR√çTICO | ‚úÖ RESOLVIDO |
+| 2Ô∏è‚É£ | Senha Hardcoded | Vari√°veis de Ambiente | CR√çTICO | ‚úÖ RESOLVIDO |
+| 3Ô∏è‚É£ | Valida√ß√£o Fraca | Valida√ß√£o de Entrada | ALTO | ‚úÖ RESOLVIDO |
 
 ---
 
-## ?? VULNERABILIDADE #1: SQL INJECTION
+## üî¥ VULNERABILIDADE #1: SQL INJECTION
 
 ### O PROBLEMA
 
 ```csharp
-// ? P…SSIMO - Extremamente vulner·vel
+// ‚ùå P√âSSIMO - Extremamente vulner√°vel
 new SqlCommand($"SELECT Nome FROM Mecanicos WHERE MecanicoID='{id}'", c)
 new SqlCommand($"DELETE FROM Instrumentos WHERE ID={id}", c)
 new SqlCommand($"UPDATE {tab} SET Mecanico='{novoMec}' WHERE ID={idDb}", c, t)
 ```
 
-**Por quÍ È perigoso?**
+**Por qu√™ √© perigoso?**
 
-Um atacante poderia fazer uma requisiÁ„o como:
+Um atacante poderia fazer uma requisi√ß√£o como:
 ```
 GET /api/movimentacao/VerificarMecanico/1' OR '1'='1
 ```
@@ -39,19 +39,19 @@ GET /api/movimentacao/VerificarMecanico/1' OR '1'='1
 E o SQL executado seria:
 ```sql
 SELECT Nome FROM Mecanicos WHERE MecanicoID='1' OR '1'='1'
--- Resultado: Retorna TODOS os mec‚nicos
+-- Resultado: Retorna TODOS os mec√¢nicos
 ```
 
-Ou atÈ pior:
+Ou at√© pior:
 ```
 DELETE FROM Instrumentos;--
 -- Resultado: Deleta TUDO da tabela!
 ```
 
-### A SOLU«√O
+### A SOLU√á√ÉO
 
 ```csharp
-// ? CORRETO - Seguro contra SQL Injection
+// ‚úÖ CORRETO - Seguro contra SQL Injection
 var cmd = new SqlCommand("SELECT Nome FROM Mecanicos WHERE MecanicoID=@id", c);
 cmd.Parameters.AddWithValue("@id", id);
 var res = cmd.ExecuteScalar();
@@ -59,24 +59,24 @@ var res = cmd.ExecuteScalar();
 
 **Como funciona:**
 
-1. O SQL È compilado com placeholders (`@id`)
-2. Os par‚metros s„o passados separadamente
-3. O banco dados trata como DADOS, n„o como cÛdigo SQL
-4. Mesmo que envie `1' OR '1'='1`, ser· tratado como string literal
+1. O SQL √© compilado com placeholders (`@id`)
+2. Os par√¢metros s√£o passados separadamente
+3. O banco dados trata como DADOS, n√£o como c√≥digo SQL
+4. Mesmo que envie `1' OR '1'='1`, ser√° tratado como string literal
 
 ### ARQUIVOS CORRIGIDOS
 
-#### ? `FerramentariaAPI/Controllers/MovimentacaoController.cs`
+#### ‚úÖ `FerramentariaAPI/Controllers/MovimentacaoController.cs`
 
 **Linhas corrigidas:**
 - `VerMec()` - GET /VerificarMecanico/{id}
 - `VerFerr()` - GET /StatusFerramenta/{id}  
-- `Reg()` - POST /Registrar (UPDATE, INSERT, UPDATE em transaÁ„o)
+- `Reg()` - POST /Registrar (UPDATE, INSERT, UPDATE em transa√ß√£o)
 
 **Exemplo antes/depois:**
 
 ```csharp
-// ANTES (Vulner·vel)
+// ANTES (Vulner√°vel)
 new SqlCommand($"SELECT ID, Mecanico FROM Instrumentos WHERE PN='{req.IdFerramenta}' OR SN='{req.IdFerramenta}'", c)
 
 // DEPOIS (Seguro)
@@ -85,14 +85,14 @@ var cmdInst = new SqlCommand(
 cmdInst.Parameters.AddWithValue("@id", req.IdFerramenta);
 ```
 
-#### ? `FerramentariaAPI/Controllers/FerramentasController.cs`
+#### ‚úÖ `FerramentariaAPI/Controllers/FerramentasController.cs`
 
 **Linhas corrigidas:**
 - `DelCom()` - DELETE /ComCalibracao/{id}
 - `DelSem()` - DELETE /SemCalibracao/{id}
 
 ```csharp
-// ANTES (Vulner·vel)
+// ANTES (Vulner√°vel)
 new SqlCommand($"DELETE FROM Instrumentos WHERE ID={id}", c)
 
 // DEPOIS (Seguro)
@@ -100,14 +100,14 @@ var cmd = new SqlCommand("DELETE FROM Instrumentos WHERE ID=@id", c);
 cmd.Parameters.AddWithValue("@id", id);
 ```
 
-#### ? `FerramentariaAPI/Controllers/MecanicosController.cs`
+#### ‚úÖ `FerramentariaAPI/Controllers/MecanicosController.cs`
 
 **Linhas corrigidas:**
 - `Add()` - POST /
 - `Del()` - DELETE /{id}
 
 ```csharp
-// ANTES (Vulner·vel)
+// ANTES (Vulner√°vel)
 new SqlCommand($"INSERT INTO Mecanicos (MecanicoID, Nome, StatusBloqueio) VALUES ('{m.MecanicoID}', '{m.Nome}', 'Ativo')", c)
 
 // DEPOIS (Seguro)
@@ -117,31 +117,31 @@ cmd.Parameters.AddWithValue("@nome", m.Nome);
 cmd.Parameters.AddWithValue("@status", "Ativo");
 ```
 
-### TESTE DE SEGURAN«A
+### TESTE DE SEGURAN√áA
 
-Para verificar que a correÁ„o funciona, teste com:
+Para verificar que a corre√ß√£o funciona, teste com:
 
 ```bash
 # Teste 1: SQL Injection em VerMec
 GET /api/movimentacao/VerificarMecanico/1' OR '1'='1
 
-# Resultado esperado: ? Erro de convers„o (seguro!)
+# Resultado esperado: ‚ùå Erro de convers√£o (seguro!)
 # O banco tenta converter "1' OR '1'='1" para INT e falha
 
 # Teste 2: Tentativa de DELETE tudo
 GET /api/ferramentas/ComCalibracao/1; DELETE FROM Instrumentos;--
 
-# Resultado esperado: ? Apenas a ferramenta com ID=1 È deletada (seguro!)
+# Resultado esperado: ‚ùå Apenas a ferramenta com ID=1 √© deletada (seguro!)
 ```
 
 ---
 
-## ?? VULNERABILIDADE #2: SENHA HARDCODED
+## üî¥ VULNERABILIDADE #2: SENHA HARDCODED
 
 ### O PROBLEMA
 
 ```json
-// ? P…SSIMO - Senha em arquivo de repositÛrio
+// ‚ùå P√âSSIMO - Senha em arquivo de reposit√≥rio
 {
   "ConnectionStrings": {
     "DefaultConnection": "Server=...;Password=Criolina1!;..."
@@ -149,18 +149,18 @@ GET /api/ferramentas/ComCalibracao/1; DELETE FROM Instrumentos;--
 }
 ```
 
-**Por quÍ È perigoso?**
+**Por qu√™ √© perigoso?**
 
-1. Se o repositÛrio for p˙blico no GitHub, **qualquer pessoa tem acesso**
-2. Se alguÈm clonar o cÛdigo, tem a senha
+1. Se o reposit√≥rio for p√∫blico no GitHub, **qualquer pessoa tem acesso**
+2. Se algu√©m clonar o c√≥digo, tem a senha
 3. Se o computador for roubado, tem a senha
-4. N„o h· revogaÁ„o - precisa mudar senha no banco
-5. Qualquer pessoa com Git pode ver no histÛrico
+4. N√£o h√° revoga√ß√£o - precisa mudar senha no banco
+5. Qualquer pessoa com Git pode ver no hist√≥rico
 
-### A SOLU«√O
+### A SOLU√á√ÉO
 
 ```json
-// ? CORRETO - Placeholder para vari·vel de ambiente
+// ‚úÖ CORRETO - Placeholder para vari√°vel de ambiente
 {
   "ConnectionStrings": {
     "DefaultConnection": "Server=...;Password={DB_PASSWORD};..."
@@ -171,7 +171,7 @@ GET /api/ferramentas/ComCalibracao/1; DELETE FROM Instrumentos;--
 E no `Program.cs`:
 
 ```csharp
-// ? SEGURO - Carrega da vari·vel de ambiente
+// ‚úÖ SEGURO - Carrega da vari√°vel de ambiente
 var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
 if (!string.IsNullOrEmpty(dbPassword))
 {
@@ -180,15 +180,15 @@ if (!string.IsNullOrEmpty(dbPassword))
 }
 else if (builder.Environment.IsProduction())
 {
-    throw new InvalidOperationException("? DB_PASSWORD n„o configurada!");
+    throw new InvalidOperationException("‚ùå DB_PASSWORD n√£o configurada!");
 }
 ```
 
 ### ARQUIVOS CORRIGIDOS
 
-#### ? `FerramentariaAPI/appsettings.json`
+#### ‚úÖ `FerramentariaAPI/appsettings.json`
 
-**MudanÁa:**
+**Mudan√ßa:**
 ```json
 // ANTES
 "Password": "Criolina1!"
@@ -197,13 +197,13 @@ else if (builder.Environment.IsProduction())
 "Password": "{DB_PASSWORD}"
 ```
 
-#### ? `FerramentariaAPI/Program.cs`
+#### ‚úÖ `FerramentariaAPI/Program.cs`
 
 **Adicionado:** Bloco de carregamento seguro de senha
 
 ### COMO CONFIGURAR EM CADA AMBIENTE
 
-#### ??? LOCAL (Desenvolvimento)
+#### üñ•Ô∏è LOCAL (Desenvolvimento)
 
 **Windows PowerShell:**
 ```powershell
@@ -223,7 +223,7 @@ export DB_PASSWORD="sua_senha_aqui"
 dotnet run
 ```
 
-#### ?? DOCKER (Container)
+#### üê≥ DOCKER (Container)
 
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
@@ -238,15 +238,15 @@ ENTRYPOINT ["dotnet", "FerramentariaAPI.dll"]
 docker run -e DB_PASSWORD="sua_senha" meu_app:latest
 ```
 
-#### ?? AZURE (App Service)
+#### ‚òÅÔ∏è AZURE (App Service)
 
-1. V· para **App Service** ? **Configuration**
+1. V√° para **App Service** ‚Üí **Configuration**
 2. **New application setting:**
    - Name: `DB_PASSWORD`
    - Value: `sua_senha_super_secreta`
 3. **Save**
 
-#### ?? GITHUB SECRETS (CI/CD)
+#### üîë GITHUB SECRETS (CI/CD)
 
 ```yaml
 name: Deploy
@@ -261,26 +261,26 @@ jobs:
        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 ```
 
-### CHECKLIST P”S-IMPLEMENTA«√O
+### CHECKLIST P√ìS-IMPLEMENTA√á√ÉO
 
-- ? `appsettings.json` n„o contÈm senha real
-- ? `Program.cs` carrega de vari·vel de ambiente
-- ? Em produÁ„o, falha se `DB_PASSWORD` n„o existir
-- ? Senha pode ser rotacionada sem fazer deploy novo
-- ? Diferentes ambientes podem ter senhas diferentes
+- ‚úÖ `appsettings.json` n√£o cont√©m senha real
+- ‚úÖ `Program.cs` carrega de vari√°vel de ambiente
+- ‚úÖ Em produ√ß√£o, falha se `DB_PASSWORD` n√£o existir
+- ‚úÖ Senha pode ser rotacionada sem fazer deploy novo
+- ‚úÖ Diferentes ambientes podem ter senhas diferentes
 
 ---
 
-## ?? VULNERABILIDADE #3: VALIDA«√O FRACA
+## üî¥ VULNERABILIDADE #3: VALIDA√á√ÉO FRACA
 
 ### O PROBLEMA
 
 ```csharp
-// ? P…SSIMO - Sem validaÁ„o
+// ‚ùå P√âSSIMO - Sem valida√ß√£o
 private async void btnNova_Click(object sender, EventArgs e)
 {
     object[] d = f.NovoItemDados;
-    // Envia direto sem checar se est· vazio!
+    // Envia direto sem checar se est√° vazio!
     await ApiService.PostCom(new Instrumento { 
         InstrumentoNome = d[0]?.ToString(), // Pode ser null
    Modelo = d[1]?.ToString(),         // Pode ser null
@@ -289,17 +289,17 @@ private async void btnNova_Click(object sender, EventArgs e)
 }
 ```
 
-**Por quÍ È perigoso?**
+**Por qu√™ √© perigoso?**
 
-1. Usu·rio envia campos vazios
+1. Usu√°rio envia campos vazios
 2. Banco recusa (erro feio)
 3. Dados inconsistentes
-4. RelatÛrios quebrados
+4. Relat√≥rios quebrados
 
-### A SOLU«√O
+### A SOLU√á√ÉO
 
 ```csharp
-// ? CORRETO - Com validaÁ„o
+// ‚úÖ CORRETO - Com valida√ß√£o
 private async void btnNova_Click(object sender, EventArgs e)
 {
     object[] d = f.NovoItemDados;
@@ -307,8 +307,8 @@ private async void btnNova_Click(object sender, EventArgs e)
     // Valida ANTES de enviar
     if (!ValidarCamposInstrumento(d))
     {
-   MessageBox.Show("Campos obrigatÛrios n„o preenchidos!", 
-      "ValidaÁ„o", 
+   MessageBox.Show("Campos obrigat√≥rios n√£o preenchidos!", 
+      "Valida√ß√£o", 
     MessageBoxButtons.OK, 
    MessageBoxIcon.Warning);
  return;
@@ -328,16 +328,16 @@ private bool ValidarCamposInstrumento(object[] dados)
 
 ### ARQUIVOS CORRIGIDOS
 
-#### ? `WindowsFormsApp2/Form1.cs`
+#### ‚úÖ `WindowsFormsApp2/Form1.cs`
 
-**MÈtodos adicionados:**
-- `ValidarCamposInstrumento()` - Valida instrumentos com calibraÁ„o
-- `ValidarCamposFerramentaSemCalibracao()` - Valida ferramentas sem calibraÁ„o
+**M√©todos adicionados:**
+- `ValidarCamposInstrumento()` - Valida instrumentos com calibra√ß√£o
+- `ValidarCamposFerramentaSemCalibracao()` - Valida ferramentas sem calibra√ß√£o
 
 **Eventos melhorados:**
 - `btnNova_Click()` - Agora valida antes de salvar
 - `btnEditar_Click()` - Agora valida antes de atualizar
-- Todos retornam mensagens claras: ? ou ?
+- Todos retornam mensagens claras: ‚úÖ ou ‚ùå
 
 **Exemplo:**
 
@@ -348,65 +348,65 @@ catch (Exception ex) { MessageBox.Show(ex.Message); }
 // DEPOIS  
 catch (Exception ex) 
 { 
-  MessageBox.Show($"? Erro ao adicionar: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+  MessageBox.Show($"‚ùå Erro ao adicionar: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error); 
 }
 ```
 
-### MELHORIAS TAMB…M NA API
+### MELHORIAS TAMB√âM NA API
 
-#### ? `FerramentariaAPI/Controllers/MovimentacaoController.cs`
+#### ‚úÖ `FerramentariaAPI/Controllers/MovimentacaoController.cs`
 
 ```csharp
-// Adicionado validaÁ„o:
+// Adicionado valida√ß√£o:
 if (string.IsNullOrWhiteSpace(req.Tipo) || string.IsNullOrWhiteSpace(req.IdFerramenta))
-    return BadRequest("Tipo e IdFerramenta s„o obrigatÛrios.");
+    return BadRequest("Tipo e IdFerramenta s√£o obrigat√≥rios.");
 ```
 
-#### ? `FerramentariaAPI/Controllers/MecanicosController.cs`
+#### ‚úÖ `FerramentariaAPI/Controllers/MecanicosController.cs`
 
 ```csharp
-// Adicionado validaÁ„o:
+// Adicionado valida√ß√£o:
 if (string.IsNullOrWhiteSpace(m.MecanicoID) || string.IsNullOrWhiteSpace(m.Nome))
-    return BadRequest(new { erro = "MecanicoID e Nome s„o obrigatÛrios." });
+    return BadRequest(new { erro = "MecanicoID e Nome s√£o obrigat√≥rios." });
 ```
 
 ---
 
-## ?? RESUMO DE MUDAN«AS
+## üéØ RESUMO DE MUDAN√áAS
 
 ### API (Backend)
 
-| Arquivo | Linhas | MudanÁa |
+| Arquivo | Linhas | Mudan√ßa |
 |---------|--------|---------|
-| MovimentacaoController.cs | ? Todas | SQL Injection ? Par‚metros |
-| FerramentasController.cs | ? DELETE | SQL Injection ? Par‚metros |
-| MecanicosController.cs | ? INSERT/DELETE | SQL Injection ? Par‚metros |
-| Program.cs | ? Novo bloco | Carregamento seguro de senha |
-| appsettings.json | ? Password | `{DB_PASSWORD}` placeholder |
+| MovimentacaoController.cs | ‚úÖ Todas | SQL Injection ‚Üí Par√¢metros |
+| FerramentasController.cs | ‚úÖ DELETE | SQL Injection ‚Üí Par√¢metros |
+| MecanicosController.cs | ‚úÖ INSERT/DELETE | SQL Injection ‚Üí Par√¢metros |
+| Program.cs | ‚úÖ Novo bloco | Carregamento seguro de senha |
+| appsettings.json | ‚úÖ Password | `{DB_PASSWORD}` placeholder |
 
 ### Windows Forms (Frontend)
 
-| Arquivo | Linhas | MudanÁa |
+| Arquivo | Linhas | Mudan√ßa |
 |---------|--------|---------|
-| Form1.cs | ? btnNova_Click | ValidaÁ„o de campos |
-| Form1.cs | ? 2 mÈtodos novos | ValidarCamposInstrumento() |
-| Form1.cs | ? Mensagens | Feedback melhorado (?/?) |
+| Form1.cs | ‚úÖ btnNova_Click | Valida√ß√£o de campos |
+| Form1.cs | ‚úÖ 2 m√©todos novos | ValidarCamposInstrumento() |
+| Form1.cs | ‚úÖ Mensagens | Feedback melhorado (‚úÖ/‚ùå) |
 
 ---
 
-## ? TESTES RECOMENDADOS
+## ‚úÖ TESTES RECOMENDADOS
 
 ### 1. Testar SQL Injection (Agora bloqueado)
 
 ```bash
-# Antes: Funcionava (P…SSIMO!)
-# Depois: Erro seguro ?
+# Antes: Funcionava (P√âSSIMO!)
+# Depois: Erro seguro ‚úÖ
 
 # Teste no Postman:
 GET http://localhost:5000/api/movimentacao/VerificarMecanico/1' OR '1'='1
 ```
 
-### 2. Testar Senha em Vari·vel de Ambiente
+### 2. Testar Senha em Vari√°vel de Ambiente
 
 ```bash
 # Windows
@@ -418,22 +418,22 @@ export DB_PASSWORD=MinhaS3nh@Forte
 dotnet run
 ```
 
-### 3. Testar ValidaÁ„o de Entrada
+### 3. Testar Valida√ß√£o de Entrada
 
 ```csharp
 // No Windows Forms, tente salvar sem preencher campos
-// Resultado esperado: "Campos obrigatÛrios n„o preenchidos!"
+// Resultado esperado: "Campos obrigat√≥rios n√£o preenchidos!"
 ```
 
 ---
 
-## ?? REFER NCIAS E BEST PRACTICES
+## üìö REFER√äNCIAS E BEST PRACTICES
 
 ### OWASP Top 10
 
-- **A03:2021 ñ Injection** ? SQL Injection (CORRIGIDO ?)
-- **A07:2021 ñ Identification and Authentication Failures** ? Senha exposta (CORRIGIDO ?)
-- **A01:2021 ñ Broken Access Control** ? ValidaÁ„o (CORRIGIDO ?)
+- **A03:2021 ‚Äì Injection** ‚Üê SQL Injection (CORRIGIDO ‚úÖ)
+- **A07:2021 ‚Äì Identification and Authentication Failures** ‚Üê Senha exposta (CORRIGIDO ‚úÖ)
+- **A01:2021 ‚Äì Broken Access Control** ‚Üê Valida√ß√£o (CORRIGIDO ‚úÖ)
 
 ### Microsoft Docs
 
@@ -443,26 +443,26 @@ dotnet run
 
 ---
 
-## ?? PR”XIMAS ETAPAS (Opcional)
+## üöÄ PR√ìXIMAS ETAPAS (Opcional)
 
-### M…DIO PRAZO
+### M√âDIO PRAZO
 
 1. Implementar **Logging** (Serilog/NLog)
    - Registrar todas as tentativas de SQL Injection
-   - Alertar se houver padrıes suspeitos
+   - Alertar se houver padr√µes suspeitos
 
-2. Adicionar **Testes de SeguranÁa**
+2. Adicionar **Testes de Seguran√ßa**
    ```csharp
    [TestMethod]
    public void TestSqlInjection_ShouldFail()
    {
    var result = _controller.VerMec("1' OR '1'='1");
-  Assert.IsNotNull(result); // N„o pode retornar dados
+  Assert.IsNotNull(result); // N√£o pode retornar dados
    }
    ```
 
 3. Implementar **Rate Limiting** (Throttling)
-   - Bloquear m˙ltiplas tentativas falhas
+   - Bloquear m√∫ltiplas tentativas falhas
 
 ### LONGO PRAZO
 
@@ -470,20 +470,20 @@ dotnet run
    - Elimina SQL manualmente (menos erros)
 
 2. Implementar **JWT Authentication**
-   - Adiciona autenticaÁ„o forte
+   - Adiciona autentica√ß√£o forte
 
 3. Usar **Azure Key Vault**
    - Gerenciamento centralizado de secrets
 
 ---
 
-## ?? SUPORTE
+## üìû SUPORTE
 
 Se encontrar algum problema:
 
-1. Verifique se `DB_PASSWORD` est· configurada
+1. Verifique se `DB_PASSWORD` est√° configurada
 2. Veja os logs da API para detalhes do erro
-3. Teste a conex„o SQL manualmente
+3. Teste a conex√£o SQL manualmente
 
 ```bash
 # Windows
@@ -495,6 +495,5 @@ sqlcmd -S srv-ferramentaria-2025.database.windows.net -U admin_ferramentas -P $D
 
 ---
 
-**Status Final:** ? SEGURAN«A IMPLEMENTADA E TESTADA  
+**Status Final:** ‚úÖ SEGURAN√áA IMPLEMENTADA E TESTADA  
 **Data:** 2025  
-**Desenvolvido por:** GitHub Copilot com Copilot Workspace
