@@ -144,8 +144,21 @@ namespace FerramentariaAPI.Controllers
         [HttpDelete("ComCalibracao/{id}")]
         public IActionResult DelCom(int id)
         {
-            using (var c = GetConnection()) { c.Open(); new SqlCommand($"DELETE FROM Instrumentos WHERE ID={id}", c).ExecuteNonQuery(); }
-            return Ok();
+            try
+            {
+                // ✅ CORRIGIDO: Usar parâmetro @id
+                using (var c = GetConnection()) { c.Open(); var cmd = new SqlCommand("DELETE FROM Instrumentos WHERE ID=@id", c); cmd.Parameters.AddWithValue("@id", id); int linhasAfetadas = cmd.ExecuteNonQuery();
+
+                    if (linhasAfetadas > 0)
+                        return Ok(new { sucesso = true, mensagem = "Instrumento deletado com sucesso." });
+                    else
+                        return NotFound(new { erro = "Instrumento não encontrado." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { erro = "Erro ao deletar", detalhes = ex.Message });
+            }
         }
 
         // --- SEM CALIBRAÇÃO (CRUD COMPLETO - ADICIONADO PUT/DELETE) ---
@@ -235,8 +248,21 @@ namespace FerramentariaAPI.Controllers
         [HttpDelete("SemCalibracao/{id}")]
         public IActionResult DelSem(int id)
         {
-            using (var c = GetConnection()) { c.Open(); new SqlCommand($"DELETE FROM FerramentasSemCalibracao WHERE ID={id}", c).ExecuteNonQuery(); }
-            return Ok();
+            try
+            {
+                // ✅ CORRIGIDO: Usar parâmetro @id
+                using (var c = GetConnection()) { c.Open(); var cmd = new SqlCommand("DELETE FROM FerramentasSemCalibracao WHERE ID=@id", c); cmd.Parameters.AddWithValue("@id", id); int linhasAfetadas = cmd.ExecuteNonQuery();
+
+                    if (linhasAfetadas > 0)
+                        return Ok(new { sucesso = true, mensagem = "Ferramenta deletada com sucesso." });
+                    else
+                        return NotFound(new { erro = "Ferramenta não encontrada." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { erro = "Erro ao deletar", detalhes = ex.Message });
+            }
         }
     }
 }

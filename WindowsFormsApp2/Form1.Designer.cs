@@ -92,7 +92,7 @@
             this.panelEsquerdo.Controls.Add(this.btnConfiguracoes);
             this.panelEsquerdo.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelEsquerdo.Location = new System.Drawing.Point(0, 49);
-            this.panelEsquerdo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelEsquerdo.Margin = new System.Windows.Forms.Padding(4);
             this.panelEsquerdo.Name = "panelEsquerdo";
             this.panelEsquerdo.Size = new System.Drawing.Size(267, 641);
             this.panelEsquerdo.TabIndex = 0;
@@ -106,7 +106,7 @@
             this.btnBuscaAvancada.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnBuscaAvancada.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnBuscaAvancada.Location = new System.Drawing.Point(0, 441);
-            this.btnBuscaAvancada.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnBuscaAvancada.Margin = new System.Windows.Forms.Padding(4);
             this.btnBuscaAvancada.Name = "btnBuscaAvancada";
             this.btnBuscaAvancada.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnBuscaAvancada.Size = new System.Drawing.Size(267, 49);
@@ -125,7 +125,7 @@
             this.btnRelatorios.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnRelatorios.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnRelatorios.Location = new System.Drawing.Point(0, 392);
-            this.btnRelatorios.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRelatorios.Margin = new System.Windows.Forms.Padding(4);
             this.btnRelatorios.Name = "btnRelatorios";
             this.btnRelatorios.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnRelatorios.Size = new System.Drawing.Size(267, 49);
@@ -144,7 +144,7 @@
             this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnFiltrar.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnFiltrar.Location = new System.Drawing.Point(0, 343);
-            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnFiltrar.Margin = new System.Windows.Forms.Padding(4);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnFiltrar.Size = new System.Drawing.Size(267, 49);
@@ -163,7 +163,7 @@
             this.btnMovimentacao.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnMovimentacao.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnMovimentacao.Location = new System.Drawing.Point(0, 294);
-            this.btnMovimentacao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMovimentacao.Margin = new System.Windows.Forms.Padding(4);
             this.btnMovimentacao.Name = "btnMovimentacao";
             this.btnMovimentacao.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnMovimentacao.Size = new System.Drawing.Size(267, 49);
@@ -183,7 +183,7 @@
             this.btnMecanicos.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnMecanicos.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnMecanicos.Location = new System.Drawing.Point(0, 245);
-            this.btnMecanicos.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMecanicos.Margin = new System.Windows.Forms.Padding(4);
             this.btnMecanicos.Name = "btnMecanicos";
             this.btnMecanicos.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnMecanicos.Size = new System.Drawing.Size(267, 49);
@@ -203,7 +203,7 @@
             this.btnExcluir.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnExcluir.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnExcluir.Location = new System.Drawing.Point(0, 196);
-            this.btnExcluir.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnExcluir.Margin = new System.Windows.Forms.Padding(4);
             this.btnExcluir.Name = "btnExcluir";
             this.btnExcluir.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnExcluir.Size = new System.Drawing.Size(267, 49);
@@ -223,7 +223,7 @@
             this.btnEditar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnEditar.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnEditar.Location = new System.Drawing.Point(0, 147);
-            this.btnEditar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEditar.Margin = new System.Windows.Forms.Padding(4);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnEditar.Size = new System.Drawing.Size(267, 49);
@@ -242,7 +242,7 @@
             this.btnNova.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnNova.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnNova.Location = new System.Drawing.Point(0, 98);
-            this.btnNova.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnNova.Margin = new System.Windows.Forms.Padding(4);
             this.btnNova.Name = "btnNova";
             this.btnNova.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnNova.Size = new System.Drawing.Size(267, 49);
@@ -261,7 +261,7 @@
             this.btnInstrumentos.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnInstrumentos.ForeColor = System.Drawing.Color.White;
             this.btnInstrumentos.Location = new System.Drawing.Point(0, 49);
-            this.btnInstrumentos.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnInstrumentos.Margin = new System.Windows.Forms.Padding(4);
             this.btnInstrumentos.Name = "btnInstrumentos";
             this.btnInstrumentos.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnInstrumentos.Size = new System.Drawing.Size(267, 49);
@@ -280,7 +280,7 @@
             this.btnProcurar.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnProcurar.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnProcurar.Location = new System.Drawing.Point(0, 0);
-            this.btnProcurar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnProcurar.Margin = new System.Windows.Forms.Padding(4);
             this.btnProcurar.Name = "btnProcurar";
             this.btnProcurar.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnProcurar.Size = new System.Drawing.Size(267, 49);
@@ -299,7 +299,7 @@
             this.btnConfiguracoes.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnConfiguracoes.ForeColor = System.Drawing.Color.Gainsboro;
             this.btnConfiguracoes.Location = new System.Drawing.Point(0, 592);
-            this.btnConfiguracoes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnConfiguracoes.Margin = new System.Windows.Forms.Padding(4);
             this.btnConfiguracoes.Name = "btnConfiguracoes";
             this.btnConfiguracoes.Padding = new System.Windows.Forms.Padding(13, 0, 0, 0);
             this.btnConfiguracoes.Size = new System.Drawing.Size(267, 49);
@@ -314,11 +314,10 @@
             this.panelSuperior.Controls.Add(this.lblTitulo);
             this.panelSuperior.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSuperior.Location = new System.Drawing.Point(0, 0);
-            this.panelSuperior.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelSuperior.Margin = new System.Windows.Forms.Padding(4);
             this.panelSuperior.Name = "panelSuperior";
             this.panelSuperior.Size = new System.Drawing.Size(1685, 49);
-            this.panelSuperior.TabIndex = 1;
-            // 
+            this.panelSuperior.TabIndex = 1;            // 
             // lblTitulo
             // 
             this.lblTitulo.AutoSize = true;
@@ -339,11 +338,10 @@
             this.panelPrincipal.Controls.Add(this.tabControlPrincipal);
             this.panelPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelPrincipal.Location = new System.Drawing.Point(267, 49);
-            this.panelPrincipal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelPrincipal.Margin = new System.Windows.Forms.Padding(4);
             this.panelPrincipal.Name = "panelPrincipal";
             this.panelPrincipal.Size = new System.Drawing.Size(1418, 641);
             this.panelPrincipal.TabIndex = 2;
-            this.panelPrincipal.Paint += new System.Windows.Forms.PaintEventHandler(this.panelPrincipal_Paint);
             // 
             // lblBusca
             // 
@@ -361,7 +359,7 @@
             // 
             this.txtBusca.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtBusca.Location = new System.Drawing.Point(100, 15);
-            this.txtBusca.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtBusca.Margin = new System.Windows.Forms.Padding(4);
             this.txtBusca.Name = "txtBusca";
             this.txtBusca.Size = new System.Drawing.Size(399, 27);
             this.txtBusca.TabIndex = 1;
@@ -376,7 +374,7 @@
             this.tabControlPrincipal.Controls.Add(this.tabComCalibracao);
             this.tabControlPrincipal.Controls.Add(this.tabSemCalibracao);
             this.tabControlPrincipal.Location = new System.Drawing.Point(13, 55);
-            this.tabControlPrincipal.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControlPrincipal.Margin = new System.Windows.Forms.Padding(4);
             this.tabControlPrincipal.Name = "tabControlPrincipal";
             this.tabControlPrincipal.SelectedIndex = 0;
             this.tabControlPrincipal.Size = new System.Drawing.Size(1388, 571);
@@ -386,9 +384,9 @@
             // 
             this.tabComCalibracao.Controls.Add(this.dgvDados);
             this.tabComCalibracao.Location = new System.Drawing.Point(4, 25);
-            this.tabComCalibracao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabComCalibracao.Margin = new System.Windows.Forms.Padding(4);
             this.tabComCalibracao.Name = "tabComCalibracao";
-            this.tabComCalibracao.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabComCalibracao.Padding = new System.Windows.Forms.Padding(4);
             this.tabComCalibracao.Size = new System.Drawing.Size(1380, 542);
             this.tabComCalibracao.TabIndex = 0;
             this.tabComCalibracao.Text = "Com Calibração";
@@ -421,7 +419,7 @@
             this.colCertificadoPDF});
             this.dgvDados.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDados.Location = new System.Drawing.Point(4, 4);
-            this.dgvDados.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvDados.Margin = new System.Windows.Forms.Padding(4);
             this.dgvDados.MultiSelect = false;
             this.dgvDados.Name = "dgvDados";
             this.dgvDados.ReadOnly = true;
@@ -581,10 +579,10 @@
             // 
             this.tabSemCalibracao.Controls.Add(this.dgvSemCalibracao);
             this.tabSemCalibracao.Location = new System.Drawing.Point(4, 25);
-            this.tabSemCalibracao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabSemCalibracao.Margin = new System.Windows.Forms.Padding(4);
             this.tabSemCalibracao.Name = "tabSemCalibracao";
-            this.tabSemCalibracao.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tabSemCalibracao.Size = new System.Drawing.Size(1381, 542);
+            this.tabSemCalibracao.Padding = new System.Windows.Forms.Padding(4);
+            this.tabSemCalibracao.Size = new System.Drawing.Size(1380, 542);
             this.tabSemCalibracao.TabIndex = 1;
             this.tabSemCalibracao.Text = "Sem Calibração";
             this.tabSemCalibracao.UseVisualStyleBackColor = true;
@@ -607,14 +605,14 @@
             this.colSemMecanico});
             this.dgvSemCalibracao.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvSemCalibracao.Location = new System.Drawing.Point(4, 4);
-            this.dgvSemCalibracao.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvSemCalibracao.Margin = new System.Windows.Forms.Padding(4);
             this.dgvSemCalibracao.MultiSelect = false;
             this.dgvSemCalibracao.Name = "dgvSemCalibracao";
             this.dgvSemCalibracao.ReadOnly = true;
             this.dgvSemCalibracao.RowHeadersVisible = false;
             this.dgvSemCalibracao.RowHeadersWidth = 51;
             this.dgvSemCalibracao.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSemCalibracao.Size = new System.Drawing.Size(1373, 534);
+            this.dgvSemCalibracao.Size = new System.Drawing.Size(1372, 534);
             this.dgvSemCalibracao.TabIndex = 0;
             this.dgvSemCalibracao.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSemCalibracao_CellDoubleClick);
             // 
@@ -698,7 +696,7 @@
             this.Controls.Add(this.panelPrincipal);
             this.Controls.Add(this.panelEsquerdo);
             this.Controls.Add(this.panelSuperior);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CONTROLE DE CALIBRAÇÃO DE INSTRUMENTOS";
