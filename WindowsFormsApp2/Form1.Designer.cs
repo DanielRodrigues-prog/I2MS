@@ -17,6 +17,7 @@
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panelEsquerdo = new System.Windows.Forms.Panel();
             this.btnBuscaAvancada = new System.Windows.Forms.Button();
             this.btnRelatorios = new System.Windows.Forms.Button();
@@ -317,7 +318,8 @@
             this.panelSuperior.Margin = new System.Windows.Forms.Padding(4);
             this.panelSuperior.Name = "panelSuperior";
             this.panelSuperior.Size = new System.Drawing.Size(1685, 49);
-            this.panelSuperior.TabIndex = 1;            // 
+            this.panelSuperior.TabIndex = 1;
+            // 
             // lblTitulo
             // 
             this.lblTitulo.AutoSize = true;
@@ -696,6 +698,7 @@
             this.Controls.Add(this.panelPrincipal);
             this.Controls.Add(this.panelEsquerdo);
             this.Controls.Add(this.panelSuperior);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
