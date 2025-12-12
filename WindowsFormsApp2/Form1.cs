@@ -73,12 +73,15 @@ namespace WindowsFormsApp2
         {
             ConfigurarDashboard();
             ConfigurarAbaHistorico();
+            ConfigurarBotaoEmprestimo(); // ✅ NOVO: Botão de Empréstimo
             timerAnimacao.Start();
             await CarregarTudo();
 
-            // ✅ NOVO: CONFIGURAÇÃO DO MENU DE CONTEXTO (BOTÃO DIREITO)
+            // Configuração do Menu de Contexto (Botão Direito)
             ConfigurarMenuContextoGrid(dgvDados);
             ConfigurarMenuContextoGrid(dgvSemCalibracao);
+            dgvDados.MultiSelect = true;
+            dgvSemCalibracao.MultiSelect = true;
         }
 
         private async Task CarregarTudo()
@@ -91,6 +94,73 @@ namespace WindowsFormsApp2
         }
 
         // =============================================================
+        //  FUNCIONALIDADE: BOTÃO EMPRÉSTIMO (GERAR RECIBO PDF)
+        // =============================================================
+        private void ConfigurarBotaoEmprestimo()
+        {
+            Button btnEmprestimo = new Button();
+            btnEmprestimo.Text = "Empréstimo (PDF)";
+            btnEmprestimo.BackColor = Color.DarkOrange; // Cor de destaque
+            btnEmprestimo.ForeColor = Color.White;
+            btnEmprestimo.FlatStyle = FlatStyle.Flat;
+            btnEmprestimo.FlatAppearance.BorderSize = 0;
+            btnEmprestimo.Font = new Font("Segoe UI", 10F);
+            btnEmprestimo.Size = new Size(267, 49);
+            btnEmprestimo.TextAlign = ContentAlignment.MiddleLeft;
+            btnEmprestimo.Padding = new Padding(13, 0, 0, 0);
+            btnEmprestimo.Dock = DockStyle.Top;
+
+            // Adiciona o evento de clique
+            btnEmprestimo.Click += BtnEmprestimo_Click;
+
+            // Adiciona no painel esquerdo (posição 3, logo abaixo de Movimentação)
+            this.panelEsquerdo.Controls.Add(btnEmprestimo);
+            this.panelEsquerdo.Controls.SetChildIndex(btnEmprestimo, 3);
+        }
+
+        private void BtnEmprestimo_Click(object sender, EventArgs e)
+        {
+            // 1. Identifica Grid e Seleção
+            DataGridView dgvAtivo = null;
+            if (tabControlPrincipal.SelectedTab == tabComCalibracao) dgvAtivo = dgvDados;
+            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao) dgvAtivo = dgvSemCalibracao;
+
+            if (dgvAtivo == null || dgvAtivo.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Selecione pelo menos uma ferramenta na tabela (Segure CTRL para selecionar várias).", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            List<DataGridViewRow> selecionadas = new List<DataGridViewRow>();
+            foreach (DataGridViewRow row in dgvAtivo.SelectedRows) selecionadas.Add(row);
+
+            // 2. Abre o Formulário NOVO e BONITO
+            // Passamos a lista de ferramentas para ele mostrar na caixa da esquerda
+            using (var form = new FormDadosEmprestimo(selecionadas, this.usuarioAtual))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    // 3. Pega os dados preenchidos e manda pro Gerador
+                    var gerador = new GeradorRecibo(
+                        selecionadas,
+                        form.CedenteNome, form.CedenteEmpresa, form.CedenteEmail, form.CedenteTelefone,
+                        form.RequerenteNome, form.RequerenteEmpresa, form.RequerenteEmail, form.RequerenteTelefone,
+                        form.Obs
+                    );
+
+                    try
+                    {
+                        gerador.Imprimir();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Erro ao gerar recibo: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        // =============================================================
         //  FUNCIONALIDADE: MENU DE CONTEXTO (BOTÃO DIREITO)
         // =============================================================
         private void ConfigurarMenuContextoGrid(DataGridView dgv)
@@ -99,175 +169,59 @@ namespace WindowsFormsApp2
             menuContexto.Font = new Font("Segoe UI", 9);
             menuContexto.RenderMode = ToolStripRenderMode.Professional;
 
-            // 📋 Copiar Célula
-            ToolStripMenuItem itemCopiarCelula = new ToolStripMenuItem
-            {
-                Text = "📋 Copiar Célula",
-                ShortcutKeys = Keys.Control | Keys.C,
-                ShowShortcutKeys = true
-            };
+            // Copiar Célula
+            ToolStripMenuItem itemCopiarCelula = new ToolStripMenuItem { Text = "📋 Copiar Célula", ShortcutKeys = Keys.Control | Keys.C, ShowShortcutKeys = true };
             itemCopiarCelula.Click += (s, e) =>
             {
                 if (dgv.CurrentCell != null && dgv.CurrentCell.Value != null)
                 {
-                    string valor = dgv.CurrentCell.Value.ToString();
-                    Clipboard.SetText(valor);
-
-                    // Notificação discreta
+                    Clipboard.SetText(dgv.CurrentCell.Value.ToString());
                     ToolTip tooltip = new ToolTip();
-                    tooltip.Show($"✓ Copiado: {(valor.Length > 30 ? valor.Substring(0, 30) + "..." : valor)}",
-                        dgv, dgv.PointToClient(Cursor.Position), 1500);
+                    tooltip.Show("✓ Copiado!", dgv, dgv.PointToClient(Cursor.Position), 1000);
                 }
             };
 
-            // 📑 Copiar Linha Completa
-            ToolStripMenuItem itemCopiarLinha = new ToolStripMenuItem
-            {
-                Text = "📑 Copiar Linha Completa",
-                ShortcutKeys = Keys.Control | Keys.Shift | Keys.C,
-                ShowShortcutKeys = true
-            };
+            // Copiar Linha
+            ToolStripMenuItem itemCopiarLinha = new ToolStripMenuItem { Text = "📑 Copiar Linha Completa" };
             itemCopiarLinha.Click += (s, e) =>
             {
                 if (dgv.CurrentRow != null)
                 {
                     string linha = "";
-                    foreach (DataGridViewCell cell in dgv.CurrentRow.Cells)
-                    {
-                        linha += (cell.Value?.ToString() ?? "") + "\t";
-                    }
+                    foreach (DataGridViewCell cell in dgv.CurrentRow.Cells) linha += (cell.Value?.ToString() ?? "") + "\t";
                     Clipboard.SetText(linha.TrimEnd('\t'));
-
-                    ToolTip tooltip = new ToolTip();
-                    tooltip.Show("✓ Linha copiada!", dgv, dgv.PointToClient(Cursor.Position), 1500);
                 }
             };
 
-            // 🔢 Copiar com Cabeçalho
-            ToolStripMenuItem itemCopiarComCabecalho = new ToolStripMenuItem
-            {
-                Text = "🔢 Copiar Linha com Cabeçalho"
-            };
-            itemCopiarComCabecalho.Click += (s, e) =>
-            {
-                if (dgv.CurrentRow != null)
-                {
-                    string resultado = "";
-                    foreach (DataGridViewCell cell in dgv.CurrentRow.Cells)
-                    {
-                        string cabecalho = dgv.Columns[cell.ColumnIndex].HeaderText;
-                        string valor = cell.Value?.ToString() ?? "N/A";
-                        resultado += $"{cabecalho}: {valor}" + Environment.NewLine;
-                    }
-                    Clipboard.SetText(resultado);
-
-                    ToolTip tooltip = new ToolTip();
-                    tooltip.Show("✓ Linha com cabeçalhos copiada!", dgv, dgv.PointToClient(Cursor.Position), 1500);
-                }
-            };
-
-            // 📊 Copiar Nome da Coluna
-            ToolStripMenuItem itemCopiarColuna = new ToolStripMenuItem
-            {
-                Text = "📊 Copiar Nome da Coluna"
-            };
-            itemCopiarColuna.Click += (s, e) =>
-            {
-                if (dgv.CurrentCell != null)
-                {
-                    string nomeColuna = dgv.Columns[dgv.CurrentCell.ColumnIndex].HeaderText;
-                    Clipboard.SetText(nomeColuna);
-
-                    ToolTip tooltip = new ToolTip();
-                    tooltip.Show($"✓ Copiado: {nomeColuna}", dgv, dgv.PointToClient(Cursor.Position), 1500);
-                }
-            };
-
-            ToolStripSeparator separador1 = new ToolStripSeparator();
-
-            // 📋 Copiar Tudo (CSV)
-            ToolStripMenuItem itemCopiarTudo = new ToolStripMenuItem
-            {
-                Text = "📋 Copiar Toda a Tabela (CSV)"
-            };
+            // Exportar Tudo (CSV)
+            ToolStripMenuItem itemCopiarTudo = new ToolStripMenuItem { Text = "📋 Copiar Toda a Tabela (CSV)" };
             itemCopiarTudo.Click += (s, e) =>
             {
                 if (dgv.Rows.Count > 0)
                 {
                     string csv = "";
-
-                    // Cabeçalhos
-                    foreach (DataGridViewColumn col in dgv.Columns)
-                    {
-                        if (col.Visible)
-                            csv += $"\"{col.HeaderText}\";";
-                    }
+                    foreach (DataGridViewColumn col in dgv.Columns) if (col.Visible) csv += $"\"{col.HeaderText}\";";
                     csv = csv.TrimEnd(';') + Environment.NewLine;
-
-                    // Linhas
                     foreach (DataGridViewRow row in dgv.Rows)
                     {
                         if (row.IsNewRow) continue;
                         foreach (DataGridViewCell cell in row.Cells)
                         {
-                            if (dgv.Columns[cell.ColumnIndex].Visible)
-                            {
-                                string valor = cell.Value?.ToString() ?? "";
-                                valor = valor.Replace("\"", "\"\""); // Escapa aspas
-                                csv += $"\"{valor}\";";
-                            }
+                            if (dgv.Columns[cell.ColumnIndex].Visible) csv += $"\"{cell.Value?.ToString() ?? ""}\";";
                         }
                         csv = csv.TrimEnd(';') + Environment.NewLine;
                     }
-
                     Clipboard.SetText(csv);
-                    MessageBox.Show($"✓ {dgv.Rows.Count} linhas copiadas para a área de transferência!",
-                        "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Copiado para área de transferência!");
                 }
             };
 
-            ToolStripSeparator separador2 = new ToolStripSeparator();
-
-            // 🔍 Selecionar Tudo
-            ToolStripMenuItem itemSelecionarTudo = new ToolStripMenuItem
-            {
-                Text = "🔍 Selecionar Todas as Linhas",
-                ShortcutKeys = Keys.Control | Keys.A,
-                ShowShortcutKeys = true
-            };
-            itemSelecionarTudo.Click += (s, e) =>
-            {
-                dgv.SelectAll();
-            };
-
-            // Adiciona itens ao menu
-            menuContexto.Items.Add(itemCopiarCelula);
-            menuContexto.Items.Add(itemCopiarLinha);
-            menuContexto.Items.Add(itemCopiarComCabecalho);
-            menuContexto.Items.Add(itemCopiarColuna);
-            menuContexto.Items.Add(separador1);
-            menuContexto.Items.Add(itemCopiarTudo);
-            menuContexto.Items.Add(separador2);
-            menuContexto.Items.Add(itemSelecionarTudo);
-
+            menuContexto.Items.AddRange(new ToolStripItem[] { itemCopiarCelula, itemCopiarLinha, new ToolStripSeparator(), itemCopiarTudo });
             dgv.ContextMenuStrip = menuContexto;
-
-            // ✅ Atalho Ctrl+C para copiar célula
-            dgv.KeyDown += (s, ev) =>
-            {
-                if (ev.Control && ev.KeyCode == Keys.C && !ev.Shift)
-                {
-                    if (dgv.CurrentCell != null && dgv.CurrentCell.Value != null)
-                    {
-                        Clipboard.SetText(dgv.CurrentCell.Value.ToString());
-                        ev.Handled = true;
-                    }
-                }
-            };
         }
 
         // =============================================================
-        //  FUNCIONALIDADE 1: PREVIEW DE FOTO (HOVER) - MELHORADO
+        //  FUNCIONALIDADE 1: PREVIEW DE FOTO (HOVER)
         // =============================================================
         private void ConfigurarPreviewFoto()
         {
@@ -303,19 +257,19 @@ namespace WindowsFormsApp2
                 {
                     try
                     {
-                        previewBox.Image?.Dispose(); // Libera imagem anterior
-                        previewBox.Image = Image.FromFile(caminho);
+                        previewBox.Image?.Dispose();
+                        using (var ms = new MemoryStream(File.ReadAllBytes(caminho)))
+                        {
+                            previewBox.Image = Image.FromStream(ms);
+                        }
 
                         // Posiciona preview sem sair da tela
                         Point cursorPos = Cursor.Position;
                         int x = cursorPos.X + 20;
                         int y = cursorPos.Y + 20;
 
-                        // Garante que o preview não ultrapasse os limites da tela
-                        if (x + previewBox.Width > Screen.PrimaryScreen.WorkingArea.Right)
-                            x = cursorPos.X - previewBox.Width - 20;
-                        if (y + previewBox.Height > Screen.PrimaryScreen.WorkingArea.Bottom)
-                            y = cursorPos.Y - previewBox.Height - 20;
+                        if (x + previewBox.Width > Screen.PrimaryScreen.WorkingArea.Right) x = cursorPos.X - previewBox.Width - 20;
+                        if (y + previewBox.Height > Screen.PrimaryScreen.WorkingArea.Bottom) y = cursorPos.Y - previewBox.Height - 20;
 
                         previewBox.Location = new Point(Math.Max(0, x), Math.Max(0, y));
                         previewBox.Visible = true;
@@ -331,7 +285,7 @@ namespace WindowsFormsApp2
         }
 
         // =============================================================
-        //  FUNCIONALIDADE 2: ABA HISTÓRICO - MELHORADA
+        //  FUNCIONALIDADE 2: ABA HISTÓRICO
         // =============================================================
         private void ConfigurarAbaHistorico()
         {
@@ -339,44 +293,14 @@ namespace WindowsFormsApp2
             tabHist.BackColor = Color.White;
             tabControlPrincipal.TabPages.Add(tabHist);
 
-            // Painel superior com botões
-            Panel panelBotoes = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 50,
-                BackColor = Color.WhiteSmoke,
-                Padding = new Padding(5)
-            };
+            Panel panelBotoes = new Panel { Dock = DockStyle.Top, Height = 50, BackColor = Color.WhiteSmoke, Padding = new Padding(5) };
             tabHist.Controls.Add(panelBotoes);
 
-            Button btnAtualizarHist = new Button
-            {
-                Text = "🔄 Atualizar Histórico",
-                Location = new Point(10, 10),
-                Size = new Size(150, 35),
-                BackColor = Color.DodgerBlue,
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnAtualizarHist.FlatAppearance.BorderSize = 0;
+            Button btnAtualizarHist = new Button { Text = "🔄 Atualizar Histórico", Location = new Point(10, 10), Size = new Size(150, 35), BackColor = Color.DodgerBlue, ForeColor = Color.White, Font = new Font("Segoe UI", 9, FontStyle.Bold), FlatStyle = FlatStyle.Flat };
+            Button btnExportarHist = new Button { Text = "📊 Exportar", Location = new Point(170, 10), Size = new Size(120, 35), BackColor = Color.Green, ForeColor = Color.White, Font = new Font("Segoe UI", 9, FontStyle.Bold), FlatStyle = FlatStyle.Flat };
 
-            Button btnExportarHist = new Button
-            {
-                Text = "📊 Exportar",
-                Location = new Point(170, 10),
-                Size = new Size(120, 35),
-                BackColor = Color.Green,
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                FlatStyle = FlatStyle.Flat
-            };
-            btnExportarHist.FlatAppearance.BorderSize = 0;
+            panelBotoes.Controls.AddRange(new Control[] { btnAtualizarHist, btnExportarHist });
 
-            panelBotoes.Controls.Add(btnAtualizarHist);
-            panelBotoes.Controls.Add(btnExportarHist);
-
-            // ✅ CONFIGURAÇÃO DO DATAGRIDVIEW
             dgvHist = new DataGridView
             {
                 Dock = DockStyle.Fill,
@@ -387,100 +311,26 @@ namespace WindowsFormsApp2
                 BorderStyle = BorderStyle.None,
                 EnableHeadersVisualStyles = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
+                MultiSelect = true,
                 AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
                 ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
-                ColumnHeadersHeight = 50,
-                RowTemplate = new DataGridViewRow
-                {
-                    Height = 60,
-                    MinimumHeight = 60
-                }
+                ColumnHeadersHeight = 50
             };
 
-            // ✅ ESTILO PADRÃO DAS CÉLULAS
-            dgvHist.DefaultCellStyle = new DataGridViewCellStyle
-            {
-                WrapMode = DataGridViewTriState.True,
-                Padding = new Padding(12, 12, 12, 12),
-                Font = new Font("Segoe UI", 9),
-                Alignment = DataGridViewContentAlignment.MiddleLeft
-            };
-
-            // Estilo do cabeçalho
-            dgvHist.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(64, 64, 64);
-            dgvHist.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvHist.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvHist.ColumnHeadersDefaultCellStyle.Padding = new Padding(8);
-            dgvHist.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-
-            // Estilo de linhas alternadas
+            dgvHist.DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True, Padding = new Padding(12), Font = new Font("Segoe UI", 9), Alignment = DataGridViewContentAlignment.MiddleLeft };
+            dgvHist.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(64, 64, 64), ForeColor = Color.White, Font = new Font("Segoe UI", 10, FontStyle.Bold), Padding = new Padding(8), Alignment = DataGridViewContentAlignment.MiddleLeft };
             dgvHist.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245);
 
-            // ✅ ADICIONA COLUNAS
-            dgvHist.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colData",
-                HeaderText = "DATA",
-                Width = 140,
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold)
-                }
-            });
-
-            dgvHist.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colAcao",
-                HeaderText = "AÇÃO",
-                Width = 100,
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold)
-                }
-            });
-
-            dgvHist.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colFerramenta",
-                HeaderText = "FERRAMENTA",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                MinimumWidth = 200
-            });
-
-            dgvHist.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colMecanico",
-                HeaderText = "MECÂNICO",
-                Width = 150
-            });
-
-            dgvHist.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colAeronave",
-                HeaderText = "AERONAVE",
-                Width = 120,
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    Alignment = DataGridViewContentAlignment.MiddleCenter
-                }
-            });
-
-            dgvHist.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colAdmin",
-                HeaderText = "ADMINISTRADOR",
-                Width = 150
-            });
+            dgvHist.Columns.Add(new DataGridViewTextBoxColumn { Name = "colData", HeaderText = "DATA", Width = 140 });
+            dgvHist.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAcao", HeaderText = "AÇÃO", Width = 100 });
+            dgvHist.Columns.Add(new DataGridViewTextBoxColumn { Name = "colFerramenta", HeaderText = "FERRAMENTA", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill, MinimumWidth = 200 });
+            dgvHist.Columns.Add(new DataGridViewTextBoxColumn { Name = "colMecanico", HeaderText = "MECÂNICO", Width = 150 });
+            dgvHist.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAeronave", HeaderText = "AERONAVE", Width = 120 });
+            dgvHist.Columns.Add(new DataGridViewTextBoxColumn { Name = "colAdmin", HeaderText = "ADMINISTRADOR", Width = 150 });
 
             tabHist.Controls.Add(dgvHist);
-
-            // ✅ APLICA O MENU DE CONTEXTO TAMBÉM NO HISTÓRICO
             ConfigurarMenuContextoGrid(dgvHist);
 
-            // ✅ EVENTOS DOS BOTÕES
             btnAtualizarHist.Click += async (s, e) =>
             {
                 btnAtualizarHist.Enabled = false;
@@ -489,93 +339,41 @@ namespace WindowsFormsApp2
                 {
                     var dados = await ApiService.GetHistorico();
                     dgvHist.Rows.Clear();
-
                     if (dados != null)
                     {
-                        dgvHist.SuspendLayout(); // Melhora performance
-
+                        dgvHist.SuspendLayout();
                         foreach (var item in dados)
                         {
-                            int rowIndex = dgvHist.Rows.Add(
-                                item.Data ?? "N/A",
-                                item.Acao ?? "N/A",
-                                item.Ferramenta ?? "N/A",
-                                item.Mecanico ?? "N/A",
-                                item.Aeronave ?? "N/A",
-                                item.Admin ?? "N/A"
-                            );
-
-                            // ✅ APLICA CORES BASEADO NA AÇÃO
+                            int rowIndex = dgvHist.Rows.Add(item.Data, item.Acao, item.Ferramenta, item.Mecanico, item.Aeronave, item.Admin);
                             DataGridViewRow row = dgvHist.Rows[rowIndex];
                             string acao = item.Acao?.ToUpper() ?? "";
-
-                            if (acao.Contains("SAÍDA") || acao.Contains("PEGAR"))
-                            {
-                                row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230);
-                                row.Cells["colAcao"].Style.ForeColor = Color.DarkRed;
-                            }
-                            else if (acao.Contains("ENTRADA") || acao.Contains("DEVOLVER"))
-                            {
-                                row.DefaultCellStyle.BackColor = Color.FromArgb(230, 255, 230);
-                                row.Cells["colAcao"].Style.ForeColor = Color.DarkGreen;
-                            }
+                            if (acao.Contains("SAÍDA")) { row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230); row.Cells["colAcao"].Style.ForeColor = Color.DarkRed; }
+                            else if (acao.Contains("ENTRADA")) { row.DefaultCellStyle.BackColor = Color.FromArgb(230, 255, 230); row.Cells["colAcao"].Style.ForeColor = Color.DarkGreen; }
                         }
-
                         dgvHist.ResumeLayout();
                     }
-
-                    MessageBox.Show($"✓ {dgvHist.Rows.Count} registros carregados!", "Sucesso",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("✗ Erro ao carregar histórico: " + ex.Message, "Erro",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    btnAtualizarHist.Enabled = true;
-                    btnAtualizarHist.Text = "🔄 Atualizar Histórico";
-                }
+                catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
+                finally { btnAtualizarHist.Enabled = true; btnAtualizarHist.Text = "🔄 Atualizar Histórico"; }
             };
 
             btnExportarHist.Click += (s, e) => { ExportarHistoricoExcel(); };
         }
 
         // =============================================================
-        //  FUNCIONALIDADE 3: EXPORTAR PARA EXCEL - MELHORADO
+        //  FUNCIONALIDADE 3: EXPORTAR PARA EXCEL
         // =============================================================
         private void ExportarParaExcel()
         {
             DataGridView dgv = null;
             string nomeAba = "";
 
-            if (tabControlPrincipal.SelectedTab == tabComCalibracao)
-            {
-                dgv = dgvDados;
-                nomeAba = "Instrumentos_Com_Calibracao";
-            }
-            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao)
-            {
-                dgv = dgvSemCalibracao;
-                nomeAba = "Instrumentos_Sem_Calibracao";
-            }
-            else if (dgvHist != null && tabControlPrincipal.SelectedTab.Text.Contains("HISTÓRICO"))
-            {
-                dgv = dgvHist;
-                nomeAba = "Historico_Movimentacoes";
-            }
-            else
-            {
-                MessageBox.Show("Selecione uma aba com tabela.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            if (tabControlPrincipal.SelectedTab == tabComCalibracao) { dgv = dgvDados; nomeAba = "Instrumentos_Com_Calibracao"; }
+            else if (tabControlPrincipal.SelectedTab == tabSemCalibracao) { dgv = dgvSemCalibracao; nomeAba = "Instrumentos_Sem_Calibracao"; }
+            else if (dgvHist != null && tabControlPrincipal.SelectedTab.Text.Contains("HISTÓRICO")) { dgv = dgvHist; nomeAba = "Historico"; }
+            else return;
 
-            using (SaveFileDialog sfd = new SaveFileDialog()
-            {
-                Filter = "Excel (*.xlsx)|*.xlsx|CSV (*.csv)|*.csv",
-                FileName = $"Relatorio_{nomeAba}_{DateTime.Now:dd-MM-yyyy_HH-mm-ss}.csv"
-            })
+            using (SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel (*.csv)|*.csv", FileName = $"Relatorio_{nomeAba}_{DateTime.Now:dd-MM-yy}.csv" })
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
@@ -583,87 +381,26 @@ namespace WindowsFormsApp2
                     {
                         using (StreamWriter sw = new StreamWriter(sfd.FileName, false, System.Text.Encoding.UTF8))
                         {
-                            // Escreve cabeçalhos
                             string h = "";
-                            foreach (DataGridViewColumn c in dgv.Columns)
-                                h += "\"" + c.HeaderText + "\";";
+                            foreach (DataGridViewColumn c in dgv.Columns) h += "\"" + c.HeaderText + "\";";
                             sw.WriteLine(h.TrimEnd(';'));
-
-                            // Escreve dados
                             foreach (DataGridViewRow r in dgv.Rows)
                             {
                                 if (r.IsNewRow) continue;
                                 string l = "";
-                                foreach (DataGridViewCell c in r.Cells)
-                                {
-                                    string val = c.Value?.ToString() ?? "";
-                                    val = val.Replace("\"", "\"\"").Replace(";", ",");
-                                    l += "\"" + val + "\";";
-                                }
+                                foreach (DataGridViewCell c in r.Cells) l += "\"" + (c.Value?.ToString() ?? "").Replace("\"", "\"\"").Replace(";", ",") + "\";";
                                 sw.WriteLine(l.TrimEnd(';'));
                             }
                         }
-
-                        MessageBox.Show($"✓ Relatório exportado com sucesso!\n{dgv.Rows.Count} registros.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Exportado com sucesso!");
                         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(sfd.FileName) { UseShellExecute = true });
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("✗ Erro ao exportar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    catch (Exception ex) { MessageBox.Show("Erro: " + ex.Message); }
                 }
             }
         }
 
-        private void ExportarHistoricoExcel()
-        {
-            if (dgvHist == null || dgvHist.Rows.Count == 0)
-            {
-                MessageBox.Show("Nenhum dado no histórico para exportar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            using (SaveFileDialog sfd = new SaveFileDialog()
-            {
-                Filter = "CSV (*.csv)|*.csv",
-                FileName = $"Historico_Movimentacoes_{DateTime.Now:dd-MM-yyyy_HH-mm-ss}.csv"
-            })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        using (StreamWriter sw = new StreamWriter(sfd.FileName, false, System.Text.Encoding.UTF8))
-                        {
-                            string h = "";
-                            foreach (DataGridViewColumn c in dgvHist.Columns)
-                                h += "\"" + c.HeaderText + "\";";
-                            sw.WriteLine(h.TrimEnd(';'));
-
-                            foreach (DataGridViewRow r in dgvHist.Rows)
-                            {
-                                if (r.IsNewRow) continue;
-                                string l = "";
-                                foreach (DataGridViewCell c in r.Cells)
-                                {
-                                    string val = c.Value?.ToString() ?? "";
-                                    val = val.Replace("\"", "\"\"").Replace(";", ",");
-                                    l += "\"" + val + "\";";
-                                }
-                                sw.WriteLine(l.TrimEnd(';'));
-                            }
-                        }
-
-                        MessageBox.Show($"✓ Histórico exportado!\n{dgvHist.Rows.Count} registros.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(sfd.FileName) { UseShellExecute = true });
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("✗ Erro: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
+        private void ExportarHistoricoExcel() => ExportarParaExcel(); // Reutiliza lógica
 
         // =============================================================
         //  DASHBOARD (VISUAL)
@@ -711,9 +448,29 @@ namespace WindowsFormsApp2
         }
 
         // =============================================================
-        //  ARQUIVOS E CACHE
+        //  ARQUIVOS E CACHE (CORRIGIDO PARA EVITAR DUPLICAÇÃO)
         // =============================================================
-        private string SalvarArquivoLocal(byte[] b, string p, string e) { if (b == null || b.Length == 0) return ""; string n = Guid.NewGuid().ToString().Substring(0, 10) + e; try { File.WriteAllBytes(Path.Combine(p, n), b); return n; } catch { return ""; } }
+
+        // Método atualizado: Verifica se o arquivo já existe baseado no ID antes de salvar
+        private string SalvarArquivoLocal(byte[] dados, string pasta, string extensao, int id, string prefixo)
+        {
+            if (dados == null || dados.Length == 0) return "";
+
+            // Cria um nome FIXO baseado no ID (Ex: Foto_50.jpg)
+            string nomeArquivo = $"{prefixo}_{id}{extensao}";
+            string caminhoCompleto = Path.Combine(pasta, nomeArquivo);
+
+            try
+            {
+                // Se já existe e tem tamanho, não salva de novo
+                if (File.Exists(caminhoCompleto)) return nomeArquivo;
+
+                File.WriteAllBytes(caminhoCompleto, dados);
+                return nomeArquivo;
+            }
+            catch { return ""; }
+        }
+
         private byte[] LerArquivoLocal(string n, string p) { if (string.IsNullOrEmpty(n)) return null; string c = Path.Combine(p, n); return File.Exists(c) ? File.ReadAllBytes(c) : null; }
 
         // =============================================================
@@ -728,9 +485,11 @@ namespace WindowsFormsApp2
                 var l = await ApiService.GetCom();
                 foreach (var r in l)
                 {
-                    string f = SalvarArquivoLocal(r.Foto, pastaDasImagens, ".jpg"),
-                         p = SalvarArquivoLocal(r.CertificadoPDF, pastaDosCertificados, ".pdf");
-                    dgvDados.Rows.Add(r.InstrumentoNome, r.Modelo, r.PN, r.SN, r.IdentifSOD, r.IdentifOficina, r.Certificado, r.DataCalibracao, r.DataVencimento, null, r.Executante, r.Instalada, r.Local, r.SubLocalizacao, f, r.Observacoes, r.Mecanico, p);
+                    // ✅ AQUI MUDOU: Passamos o r.ID e um prefixo ("Foto" e "Cert")
+                    string f = SalvarArquivoLocal(r.Foto, pastaDasImagens, ".jpg", r.ID, "Foto");
+                    string p = SalvarArquivoLocal(r.CertificadoPDF, pastaDosCertificados, ".pdf", r.ID, "Cert");
+
+                    dgvDados.Rows.Add(r.InstrumentoNome, r.Modelo, r.Mecanico, r.PN, r.SN, r.IdentifSOD, r.IdentifOficina, r.Certificado, r.DataCalibracao, r.DataVencimento, null, r.Executante, r.Instalada, r.Local, r.SubLocalizacao, f, r.Observacoes, p);
                     dgvDados.Rows[dgvDados.Rows.Count - 1].Tag = r.ID;
                     if (DateTime.TryParseExact(r.DataVencimento, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime d))
                     {
@@ -741,10 +500,7 @@ namespace WindowsFormsApp2
                 if (av.Count > 0 && tabControlPrincipal.SelectedTab == tabComCalibracao)
                     MessageBox.Show("⚠️ Atenção! Vencimentos próximos:\n" + string.Join("\n", av), "Alerta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Erro ao carregar instrumentos: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"❌ Erro ao carregar instrumentos: {ex.Message}"); }
         }
 
         private async Task CarregarDadosSemCalibracao()
@@ -755,15 +511,15 @@ namespace WindowsFormsApp2
                 var l = await ApiService.GetSem();
                 foreach (var r in l)
                 {
-                    string f = SalvarArquivoLocal(r.Foto, pastaDasImagens, ".jpg");
+                    // ✅ AQUI MUDOU: Passamos o r.ID e o prefixo "SemCalib"
+                    string f = SalvarArquivoLocal(r.Foto, pastaDasImagens, ".jpg", r.ID, "SemCalib");
+                    string p = SalvarArquivoLocal(r.CertificadoPDF, pastaDosCertificados, ".pdf", r.ID, "SemCalib_Cert");
+
                     dgvSemCalibracao.Rows.Add(r.Descricao, r.Codigo, r.PN, r.Fabricante, r.Local, r.CadastroLocal, r.CodLocal, r.Status, r.Mecanico);
                     dgvSemCalibracao.Rows[dgvSemCalibracao.Rows.Count - 1].Tag = r.ID;
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"❌ Erro ao carregar ferramentas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"❌ Erro ao carregar ferramentas: {ex.Message}"); }
         }
 
         // =============================================================
@@ -776,13 +532,7 @@ namespace WindowsFormsApp2
                 var f = new FormItemNovo(); if (f.ShowDialog() == DialogResult.OK)
                 {
                     object[] d = f.NovoItemDados;
-
-                    // ✅ VALIDAÇÃO: Verificar campos obrigatórios
-                    if (!ValidarCamposInstrumento(d))
-                    {
-                        MessageBox.Show("Campos obrigatórios não preenchidos!", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
+                    if (!ValidarCamposInstrumento(d)) { MessageBox.Show("Campos obrigatórios não preenchidos!"); return; }
 
                     var i = new ApiService.Instrumento
                     {
@@ -804,31 +554,15 @@ namespace WindowsFormsApp2
                         Mecanico = d[16]?.ToString(),
                         CertificadoPDF = LerArquivoLocal(d[17]?.ToString(), pastaDosCertificados)
                     };
-                    try
-                    {
-                        await ApiService.PostCom(i);
-                        MessageBox.Show("✅ Instrumento adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await CarregarTudo();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"❌ Erro ao adicionar: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    try { await ApiService.PostCom(i); MessageBox.Show("Sucesso!"); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
             }
             else if (tabControlPrincipal.SelectedTab == tabSemCalibracao)
             {
-                var f = new FormItemSemCalibracao();
-                if (f.ShowDialog() == DialogResult.OK)
+                var f = new FormItemSemCalibracao(); if (f.ShowDialog() == DialogResult.OK)
                 {
                     object[] d = f.ItemDados;
-
-                    // ✅ VALIDAÇÃO: Verificar campos obrigatórios
-                    if (!ValidarCamposFerramentaSemCalibracao(d))
-                    {
-                        MessageBox.Show("Campos obrigatórios não preenchidos!", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
+                    if (!ValidarCamposFerramentaSemCalibracao(d)) { MessageBox.Show("Campos obrigatórios não preenchidos!"); return; }
 
                     var i = new ApiService.SemCalibracao
                     {
@@ -844,36 +578,24 @@ namespace WindowsFormsApp2
                         Foto = LerArquivoLocal(d[9]?.ToString(), pastaDasImagens),
                         CertificadoPDF = LerArquivoLocal(d[10]?.ToString(), pastaDosCertificados)
                     };
-                    try
-                    {
-                        await ApiService.PostSem(i);
-                        MessageBox.Show("✅ Ferramenta adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await CarregarTudo();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"❌ Erro ao adicionar: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    try { await ApiService.PostSem(i); MessageBox.Show("Sucesso!"); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
             }
         }
 
-        // ✅ MÉTODOS DE VALIDAÇÃO
         private bool ValidarCamposInstrumento(object[] dados)
         {
-            // Valida campos obrigatórios (índices 0, 1 = Nome e Modelo)
             if (dados == null || dados.Length < 10) return false;
-            if (string.IsNullOrWhiteSpace(dados[0]?.ToString())) return false; // InstrumentoNome
-            if (string.IsNullOrWhiteSpace(dados[1]?.ToString())) return false; // Modelo
+            if (string.IsNullOrWhiteSpace(dados[0]?.ToString())) return false;
+            if (string.IsNullOrWhiteSpace(dados[1]?.ToString())) return false;
             return true;
         }
 
         private bool ValidarCamposFerramentaSemCalibracao(object[] dados)
         {
-            // Valida campos obrigatórios
             if (dados == null || dados.Length < 2) return false;
-            if (string.IsNullOrWhiteSpace(dados[0]?.ToString())) return false; // Descrição
-            if (string.IsNullOrWhiteSpace(dados[1]?.ToString())) return false; // Código
+            if (string.IsNullOrWhiteSpace(dados[0]?.ToString())) return false;
+            if (string.IsNullOrWhiteSpace(dados[1]?.ToString())) return false;
             return true;
         }
 
@@ -883,7 +605,28 @@ namespace WindowsFormsApp2
             {
                 var r = dgvDados.SelectedRows[0]; var f = new FormItemEditar(r); if (f.ShowDialog() == DialogResult.OK)
                 {
-                    object[] d = f.ItemEditadoDados; var i = new ApiService.Instrumento { ID = Convert.ToInt32(r.Tag), InstrumentoNome = d[0]?.ToString(), Modelo = d[1]?.ToString(), PN = d[2]?.ToString(), SN = d[3]?.ToString(), IdentifSOD = d[4]?.ToString(), IdentifOficina = d[5]?.ToString(), Certificado = d[6]?.ToString(), DataCalibracao = ((DateTime)d[7]).ToString("dd/MM/yyyy"), DataVencimento = ((DateTime)d[8]).ToString("dd/MM/yyyy"), Executante = d[10]?.ToString(), Instalada = d[11]?.ToString(), Local = d[12]?.ToString(), SubLocalizacao = d[13]?.ToString(), Foto = LerArquivoLocal(d[14]?.ToString(), pastaDasImagens), Observacoes = d[15]?.ToString(), Mecanico = d[16]?.ToString(), CertificadoPDF = LerArquivoLocal(d[17]?.ToString(), pastaDosCertificados) };
+                    object[] d = f.ItemEditadoDados;
+                    var i = new ApiService.Instrumento
+                    {
+                        ID = Convert.ToInt32(r.Tag),
+                        InstrumentoNome = d[0]?.ToString(),
+                        Modelo = d[1]?.ToString(),
+                        PN = d[2]?.ToString(),
+                        SN = d[3]?.ToString(),
+                        IdentifSOD = d[4]?.ToString(),
+                        IdentifOficina = d[5]?.ToString(),
+                        Certificado = d[6]?.ToString(),
+                        DataCalibracao = ((DateTime)d[7]).ToString("dd/MM/yyyy"),
+                        DataVencimento = ((DateTime)d[8]).ToString("dd/MM/yyyy"),
+                        Executante = d[10]?.ToString(),
+                        Instalada = d[11]?.ToString(),
+                        Local = d[12]?.ToString(),
+                        SubLocalizacao = d[13]?.ToString(),
+                        Foto = LerArquivoLocal(d[14]?.ToString(), pastaDasImagens),
+                        Observacoes = d[15]?.ToString(),
+                        Mecanico = d[16]?.ToString(),
+                        CertificadoPDF = LerArquivoLocal(d[17]?.ToString(), pastaDosCertificados)
+                    };
                     try { await ApiService.PutCom(i.ID, i); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
             }
@@ -891,7 +634,22 @@ namespace WindowsFormsApp2
             {
                 var r = dgvSemCalibracao.SelectedRows[0]; var f = new FormItemSemCalibracao(r); if (f.ShowDialog() == DialogResult.OK)
                 {
-                    object[] d = f.ItemDados; var i = new ApiService.SemCalibracao { ID = Convert.ToInt32(r.Tag), Descricao = d[0]?.ToString(), Codigo = d[1]?.ToString(), PN = d[2]?.ToString(), Fabricante = d[3]?.ToString(), Local = d[4]?.ToString(), CadastroLocal = d[5]?.ToString(), CodLocal = d[6]?.ToString(), Status = d[7]?.ToString(), Mecanico = d[8]?.ToString(), Foto = LerArquivoLocal(d[9]?.ToString(), pastaDasImagens), CertificadoPDF = LerArquivoLocal(d[10]?.ToString(), pastaDosCertificados) };
+                    object[] d = f.ItemDados;
+                    var i = new ApiService.SemCalibracao
+                    {
+                        ID = Convert.ToInt32(r.Tag),
+                        Descricao = d[0]?.ToString(),
+                        Codigo = d[1]?.ToString(),
+                        PN = d[2]?.ToString(),
+                        Fabricante = d[3]?.ToString(),
+                        Local = d[4]?.ToString(),
+                        CadastroLocal = d[5]?.ToString(),
+                        CodLocal = d[6]?.ToString(),
+                        Status = d[7]?.ToString(),
+                        Mecanico = d[8]?.ToString(),
+                        Foto = LerArquivoLocal(d[9]?.ToString(), pastaDasImagens),
+                        CertificadoPDF = LerArquivoLocal(d[10]?.ToString(), pastaDosCertificados)
+                    };
                     try { await ApiService.PutSem(i.ID, i); await CarregarTudo(); } catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
             }
@@ -924,47 +682,36 @@ namespace WindowsFormsApp2
         }
 
         // =============================================================
-        //  FUNCIONALIDADE 4: FILTROS AVANÇADOS - MELHORADO
+        //  FILTROS AVANÇADOS
         // =============================================================
         private void txtBusca_TextChanged(object sender, EventArgs e)
         {
             string termo = txtBusca.Text.ToLower().Trim();
-            if (tabControlPrincipal.SelectedIndex == 0) return; // Ignora Dashboard
+            if (tabControlPrincipal.SelectedIndex == 0) return;
 
             DataGridView dgv = (tabControlPrincipal.SelectedTab == tabComCalibracao) ? dgvDados : dgvSemCalibracao;
-
             dgv.SuspendLayout();
             int linhasVisiveis = 0;
 
             foreach (DataGridViewRow r in dgv.Rows)
             {
                 if (r.IsNewRow) continue;
-
-                bool achou = string.IsNullOrEmpty(termo); // Se vazio, mostra tudo
-
+                bool achou = string.IsNullOrEmpty(termo);
                 if (!achou)
                 {
                     foreach (DataGridViewCell c in r.Cells)
                     {
-                        if (c.Value != null)
+                        if (c.Value != null && c.Value.ToString().ToLower().Contains(termo))
                         {
-                            string cellValue = c.Value.ToString().ToLower();
-                            if (cellValue.Contains(termo))
-                            {
-                                achou = true;
-                                break;
-                            }
+                            achou = true;
+                            break;
                         }
                     }
                 }
-
                 r.Visible = achou;
                 if (achou) linhasVisiveis++;
             }
-
             dgv.ResumeLayout();
-
-            // Atualiza label com quantidade de resultados
             lblBusca.Text = $"Procurar: ({linhasVisiveis}/{dgv.RowCount} resultados)";
         }
 
@@ -976,31 +723,12 @@ namespace WindowsFormsApp2
                 if (DateTime.TryParseExact(dgvDados.Rows[e.RowIndex].Cells["colDataVencimento"].Value?.ToString(), "dd/MM/yyyy", null, DateTimeStyles.None, out DateTime d))
                 {
                     int x = (int)(d.Date - DateTime.Today).TotalDays;
-                    if (x <= 0)
-                    {
-                        e.Value = "⚠️ VENCIDO";
-                        e.CellStyle.BackColor = Color.Red;
-                        e.CellStyle.ForeColor = Color.White;
-                    }
-                    else if (x <= 45)
-                    {
-                        e.Value = "⏰ CALIBRAR";
-                        e.CellStyle.BackColor = Color.Yellow;
-                        e.CellStyle.ForeColor = Color.Black;
-                    }
-                    else
-                    {
-                        e.Value = "✓ CALIBRADO";
-                        e.CellStyle.BackColor = Color.LightGreen;
-                        e.CellStyle.ForeColor = Color.Black;
-                    }
+                    if (x <= 0) { e.Value = "⚠️ VENCIDO"; e.CellStyle.BackColor = Color.Red; e.CellStyle.ForeColor = Color.White; }
+                    else if (x <= 45) { e.Value = "⏰ CALIBRAR"; e.CellStyle.BackColor = Color.Yellow; e.CellStyle.ForeColor = Color.Black; }
+                    else { e.Value = "✓ CALIBRADO"; e.CellStyle.BackColor = Color.LightGreen; e.CellStyle.ForeColor = Color.Black; }
                     e.FormattingApplied = true;
                 }
-                else
-                {
-                    e.Value = "N/A";
-                    e.CellStyle.BackColor = Color.LightGray;
-                }
+                else { e.Value = "N/A"; e.CellStyle.BackColor = Color.LightGray; }
             }
         }
 
