@@ -118,15 +118,18 @@ namespace FerramentariaAPI.Controllers
 
                             if (req.Tipo == "PEGAR")
                             {
-                                var sql = "INSERT INTO Emprestimos (InstrumentoID, TabelaOrigem, MecanicoID, DataSaida, Aeronave, UsuarioLiberou) VALUES (@id, @ori, @mec, @dt, @aero, @admin)";
-                                var cmd = new SqlCommand(sql, c, t);
-                                cmd.Parameters.AddWithValue("@id", idDb);
-                                cmd.Parameters.AddWithValue("@ori", ori);
-                                cmd.Parameters.AddWithValue("@mec", req.IdMecanico);
-                                cmd.Parameters.AddWithValue("@dt", dt);
-                                cmd.Parameters.AddWithValue("@aero", req.Aeronave ?? "");
-                                cmd.Parameters.AddWithValue("@admin", req.UsuarioLogado ?? "");
-                                cmd.ExecuteNonQuery();
+                                // ✅ MUDANÇA: Adicionar coluna NomeMecanico
+                                var cmdInsert = new SqlCommand(
+                                    "INSERT INTO Emprestimos (InstrumentoID, TabelaOrigem, MecanicoID, NomeMecanico, DataSaida, Aeronave, UsuarioLiberou) " +
+                                    "VALUES (@id, @ori, @mec, @nome, @dt, @aero, @admin)", c, t);
+                                cmdInsert.Parameters.AddWithValue("@id", idDb);
+                                cmdInsert.Parameters.AddWithValue("@ori", ori);
+                                cmdInsert.Parameters.AddWithValue("@mec", req.IdMecanico ?? "0");
+                                cmdInsert.Parameters.AddWithValue("@nome", req.NomeMecanico ?? ""); // ✅ NOVO
+                                cmdInsert.Parameters.AddWithValue("@dt", dt);
+                                cmdInsert.Parameters.AddWithValue("@aero", req.Aeronave ?? "");
+                                cmdInsert.Parameters.AddWithValue("@admin", req.UsuarioLogado ?? "");
+                                cmdInsert.ExecuteNonQuery();
                             }
                             else
                             {
@@ -152,14 +155,21 @@ namespace FerramentariaAPI.Controllers
                 using (var c = GetConnection())
                 {
                     c.Open();
-                    string sql = @"SELECT E.DataSaida, E.DataDevolucao, 
-                                   CASE WHEN E.TabelaOrigem = 'COM' THEN I.Instrumento ELSE F.Descricao END as Ferramenta, 
-                                   M.Nome as Mecanico, E.Aeronave, E.UsuarioLiberou 
-                                   FROM Emprestimos E 
-                                   LEFT JOIN Mecanicos M ON E.MecanicoID = M.MecanicoID 
-                                   LEFT JOIN Instrumentos I ON E.InstrumentoID = I.ID AND E.TabelaOrigem = 'COM' 
-                                   LEFT JOIN FerramentasSemCalibracao F ON E.InstrumentoID = F.ID AND E.TabelaOrigem = 'SEM' 
-                                   ORDER BY E.ID DESC";
+
+                    // ✅ MUDANÇA: Usar COALESCE para pegar o nome da tabela Mecanicos OU da coluna NomeMecanico
+                    string sql = @"
+                SELECT 
+                    E.DataSaida, 
+                    E.DataDevolucao, 
+                    CASE WHEN E.TabelaOrigem = 'COM' THEN I.Instrumento ELSE F.Descricao END as Ferramenta, 
+                    COALESCE(M.Nome, E.NomeMecanico) as Mecanico,
+                    E.Aeronave, 
+                    E.UsuarioLiberou 
+                FROM Emprestimos E 
+                LEFT JOIN Mecanicos M ON E.MecanicoID = M.MecanicoID 
+                LEFT JOIN Instrumentos I ON E.InstrumentoID = I.ID AND E.TabelaOrigem = 'COM' 
+                LEFT JOIN FerramentasSemCalibracao F ON E.InstrumentoID = F.ID AND E.TabelaOrigem = 'SEM' 
+                ORDER BY E.ID DESC";
 
                     using (var r = new SqlCommand(sql, c).ExecuteReader())
                     {
@@ -170,12 +180,13 @@ namespace FerramentariaAPI.Controllers
                                 Data = r["DataSaida"].ToString(),
                                 Acao = "SAÍDA",
                                 Ferramenta = r["Ferramenta"].ToString(),
-                                Mecanico = r["Mecanico"].ToString(),
+                                Mecanico = r["Mecanico"].ToString(), // ✅ Agora pega o nome correto
                                 Aeronave = r["Aeronave"].ToString(),
                                 Admin = r["UsuarioLiberou"].ToString()
                             });
 
                             if (!string.IsNullOrEmpty(r["DataDevolucao"]?.ToString()))
+                            {
                                 lista.Add(new HistoricoDTO
                                 {
                                     Data = r["DataDevolucao"].ToString(),
@@ -185,12 +196,16 @@ namespace FerramentariaAPI.Controllers
                                     Aeronave = r["Aeronave"].ToString(),
                                     Admin = r["UsuarioLiberou"].ToString()
                                 });
+                            }
                         }
                     }
                 }
-                return Ok(lista); // O SQL já ordenou por ID DESC (o último inserido primeiro)
+                return Ok(lista);
             }
-            catch (Exception ex) { return StatusCode(500, ex.Message); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }
