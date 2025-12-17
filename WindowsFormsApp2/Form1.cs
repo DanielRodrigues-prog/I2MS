@@ -118,45 +118,207 @@ namespace WindowsFormsApp2
             this.panelEsquerdo.Controls.SetChildIndex(btnEmprestimo, 3);
         }
 
-        private void BtnEmprestimo_Click(object sender, EventArgs e)
+        private async void BtnEmprestimo_Click(object sender, EventArgs e)
         {
             // 1. Identifica Grid e Seleção
             DataGridView dgvAtivo = null;
-            if (tabControlPrincipal.SelectedTab == tabComCalibracao) dgvAtivo = dgvDados;
+            bool ehComCalibracao = (tabControlPrincipal.SelectedTab == tabComCalibracao);
+
+            if (ehComCalibracao) dgvAtivo = dgvDados;
             else if (tabControlPrincipal.SelectedTab == tabSemCalibracao) dgvAtivo = dgvSemCalibracao;
 
             if (dgvAtivo == null || dgvAtivo.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Selecione pelo menos uma ferramenta na tabela (Segure CTRL para selecionar várias).", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione pelo menos uma ferramenta.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             List<DataGridViewRow> selecionadas = new List<DataGridViewRow>();
             foreach (DataGridViewRow row in dgvAtivo.SelectedRows) selecionadas.Add(row);
 
-            // 2. Abre o Formulário NOVO e BONITO
-            // Passamos a lista de ferramentas para ele mostrar na caixa da esquerda
+            // 2. Abre Formulário
             using (var form = new FormDadosEmprestimo(selecionadas, this.usuarioAtual))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    // 3. Pega os dados preenchidos e manda pro Gerador
-                    var gerador = new GeradorRecibo(
+                    // --- PARTE 1: GERAR PDF (Visual) ---
+                    // Isso aqui não afeta o banco, só gera o papel
+                    var gerador = new GeradorReciboV2(
                         selecionadas,
                         form.CedenteNome, form.CedenteEmpresa, form.CedenteEmail, form.CedenteTelefone,
                         form.RequerenteNome, form.RequerenteEmpresa, form.RequerenteEmail, form.RequerenteTelefone,
                         form.Obs
                     );
 
+                    try { gerador.Imprimir(); }
+                    catch { /* Ignora erro de impressão para não travar o sistema */ }
+
+                    // --- PARTE 2: ATUALIZAR BANCO DE DADOS (CORRIGIDO) ---
                     try
                     {
-                        gerador.Imprimir();
+                        foreach (DataGridViewRow row in selecionadas)
+                        {
+                            int id = Convert.ToInt32(row.Tag);
+                            string nomeFerramenta = "";
+                            string codigoFerramenta = ""; // ✅ NOVO: Vamos pegar o código de barras
+
+                            // A) IDENTIFICA O NOME E CÓDIGO DA FERRAMENTA
+                            if (ehComCalibracao)
+                            {
+                                nomeFerramenta = row.Cells["colInstrumento"].Value?.ToString() ?? "Ferramenta";
+
+                                // ✅ Tenta pegar PN, SN, IdentifSOD ou IdentifOficina (qualquer um que existir)
+                                codigoFerramenta = row.Cells["colPN"].Value?.ToString();
+                                if (string.IsNullOrEmpty(codigoFerramenta))
+                                    codigoFerramenta = row.Cells["colSN"].Value?.ToString();
+                                if (string.IsNullOrEmpty(codigoFerramenta))
+                                    codigoFerramenta = row.Cells["colIdentifSOD"].Value?.ToString();
+                                if (string.IsNullOrEmpty(codigoFerramenta))
+                                    codigoFerramenta = row.Cells["colIdentifOficina"].Value?.ToString();
+                            }
+                            else
+                            {
+                                nomeFerramenta = row.Cells["colSemDescricao"].Value?.ToString() ?? "Ferramenta";
+
+                                // ✅ Tenta pegar PN ou Código
+                                codigoFerramenta = row.Cells["colSemPN"].Value?.ToString();
+                                if (string.IsNullOrEmpty(codigoFerramenta))
+                                    codigoFerramenta = row.Cells["colSemCodigo"].Value?.ToString();
+                            }
+
+                            // Se não tem código, usa o ID como fallback
+                            if (string.IsNullOrEmpty(codigoFerramenta))
+                                codigoFerramenta = id.ToString();
+
+                            // B) REGISTRA NO HISTÓRICO **PRIMEIRO**
+                            // ✅ MUDANÇA CRÍTICA: Usar "PEGAR" em vez de "SAÍDA"
+                            await ApiService.RegMov(
+                                "PEGAR",                    // ✅ API espera "PEGAR", não "SAÍDA"
+                                codigoFerramenta,           // ✅ Código de barras (PN/SN/etc)
+                                "0",                        // ID Mecânico (0 = empréstimo manual)
+                                form.RequerenteNome,        // Nome do Mecânico
+                                form.Obs,                   // Aeronave/Contexto
+                                this.usuarioAtual           // Admin que liberou
+                            );
+
+                            // C) ATUALIZA O CADASTRO (SEM ESTRAGAR DATAS/LOCAL)
+                            if (ehComCalibracao)
+                            {
+                                var itemAtualizado = new ApiService.Instrumento
+                                {
+                                    ID = id,
+                                    InstrumentoNome = row.Cells["colInstrumento"].Value?.ToString(),
+                                    Modelo = row.Cells["colModelo"].Value?.ToString(),
+                                    PN = row.Cells["colPN"].Value?.ToString(),
+                                    SN = row.Cells["colSN"].Value?.ToString(),
+                                    IdentifSOD = row.Cells["colIdentifSOD"].Value?.ToString(),
+                                    IdentifOficina = row.Cells["colIdentifOficina"].Value?.ToString(),
+                                    Certificado = row.Cells["colCertificado"].Value?.ToString(),
+                                    DataCalibracao = row.Cells["colDataCalibracao"].Value?.ToString(),
+                                    DataVencimento = row.Cells["colDataVencimento"].Value?.ToString(),
+                                    Executante = row.Cells["colExecutante"].Value?.ToString(),
+                                    Instalada = row.Cells["colInstalada"].Value?.ToString(),
+                                    SubLocalizacao = row.Cells["colSubLocalizacao"].Value?.ToString(),
+                                    Local = row.Cells["colLocal"].Value?.ToString(),
+
+                                    // ✅ Atualiza quem está com a ferramenta
+                                    Mecanico = form.RequerenteNome,
+                                    Observacoes = row.Cells["colObservacoes"].Value?.ToString()
+                                };
+
+                                await ApiService.PutCom(id, itemAtualizado);
+                            }
+                            else
+                            {
+                                var itemAtualizado = new ApiService.SemCalibracao
+                                {
+                                    ID = id,
+                                    Descricao = row.Cells["colSemDescricao"].Value?.ToString(),
+                                    Codigo = row.Cells["colSemCodigo"].Value?.ToString(),
+                                    PN = row.Cells["colSemPN"].Value?.ToString(),
+                                    Fabricante = row.Cells["colSemFabricante"].Value?.ToString(),
+                                    CadastroLocal = row.Cells["colSemCadastroLocal"].Value?.ToString(),
+                                    CodLocal = row.Cells["colSemCodLocal"].Value?.ToString(),
+                                    Local = row.Cells["colSemLocal"].Value?.ToString(),
+
+                                    // ✅ Atualiza status
+                                    Mecanico = form.RequerenteNome,
+                                    Status = "EMPRESTADO"
+                                };
+
+                                await ApiService.PutSem(id, itemAtualizado);
+                            }
+                        }
+
+                        MessageBox.Show("✅ Salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        await CarregarTudo();
+                        await AtualizarAbaHistorico(); // ✅ Atualiza o histórico
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Erro ao gerar recibo: " + ex.Message);
+                        MessageBox.Show("Erro ao salvar: " + ex.Message);
                     }
                 }
+            }
+        }
+
+        private async Task AtualizarAbaHistorico()
+        {
+            try
+            {
+                // Procura a aba de histórico
+                foreach (TabPage tab in tabControlPrincipal.TabPages)
+                {
+                    if (tab.Text.Contains("HISTÓRICO"))
+                    {
+                        // Procura o DataGridView do histórico
+                        foreach (Control ctrl in tab.Controls)
+                        {
+                            if (ctrl is DataGridView dgv)
+                            {
+                                dgv.Rows.Clear();
+                                var dados = await ApiService.GetHistorico();
+
+                                if (dados != null)
+                                {
+                                    dgv.SuspendLayout();
+                                    foreach (var item in dados)
+                                    {
+                                        int rowIndex = dgv.Rows.Add(
+                                            item.Data,
+                                            item.Acao,
+                                            item.Ferramenta,
+                                            item.Mecanico,
+                                            item.Aeronave,
+                                            item.Admin
+                                        );
+
+                                        DataGridViewRow row = dgv.Rows[rowIndex];
+                                        string acao = item.Acao?.ToUpper() ?? "";
+
+                                        if (acao.Contains("SAÍDA"))
+                                        {
+                                            row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230);
+                                            row.Cells["colAcao"].Style.ForeColor = Color.DarkRed;
+                                        }
+                                        else if (acao.Contains("ENTRADA") || acao.Contains("DEVOLUÇÃO"))
+                                        {
+                                            row.DefaultCellStyle.BackColor = Color.FromArgb(230, 255, 230);
+                                            row.Cells["colAcao"].Style.ForeColor = Color.DarkGreen;
+                                        }
+                                    }
+                                    dgv.ResumeLayout();
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Erro ao atualizar histórico: " + ex.Message);
             }
         }
 
@@ -732,7 +894,11 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void dgvDados_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) new FormDetalhes(dgvDados.Rows[e.RowIndex]).ShowDialog(); }
+        private void dgvDados_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+                new FormHistoricoFerramenta(dgvDados.Rows[e.RowIndex]).ShowDialog();
+        }
         private void dgvSemCalibracao_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0) btnEditar_Click(sender, e); }
     }
 }

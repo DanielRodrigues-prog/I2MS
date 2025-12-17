@@ -378,6 +378,8 @@
             // 
             // FormItemNovo
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(679, 575);
             this.Controls.Add(this.btnAnexarPDF);
             this.Controls.Add(this.txtCaminhoPDF);
@@ -432,7 +434,6 @@
 
         #endregion
 
-        // Esta é a seção que estava faltando e causando o erro
         private System.Windows.Forms.Label lblInstrumento;
         private System.Windows.Forms.TextBox txtInstrumento;
         private System.Windows.Forms.Label lblModelo;

@@ -9,21 +9,17 @@ namespace WindowsFormsApp2
 {
     public partial class FormMovimentacao : Form
     {
-        private string usuarioLogado; // O Admin que está no PC
-
-        // Lista para guardar os mecânicos carregados (ID, Nome)
+        private string usuarioLogado;
         private List<ApiService.Mecanico> listaMecanicos;
 
         public FormMovimentacao()
         {
             InitializeComponent();
-            // Pega o usuário logado no Windows (Admin)
             this.usuarioLogado = Environment.UserName.ToLower();
         }
 
         private async void FormMovimentacao_Load(object sender, EventArgs e)
         {
-            // Carrega a lista de mecânicos para o combobox
             await CarregarListaMecanicos();
             txtInstrumentoID.Focus();
         }
@@ -35,87 +31,151 @@ namespace WindowsFormsApp2
                 cmbMecanicos.Items.Clear();
                 listaMecanicos = await ApiService.GetMecs();
 
-                foreach (var m in listaMecanicos)
+                if (listaMecanicos != null)
                 {
-                    // Exibe "Nome (ID)" no combobox
-                    cmbMecanicos.Items.Add($"{m.Nome} ({m.MecanicoID})");
+                    foreach (var m in listaMecanicos)
+                    {
+                        cmbMecanicos.Items.Add($"{m.Nome} ({m.MecanicoID})");
+                    }
+                    if (cmbMecanicos.Items.Count > 0) cmbMecanicos.SelectedIndex = 0;
                 }
-
-                if (cmbMecanicos.Items.Count > 0)
-                    cmbMecanicos.SelectedIndex = 0; // Seleciona o primeiro
             }
             catch (Exception ex) { MessageBox.Show("Erro ao carregar mecânicos: " + ex.Message); }
         }
 
+        // Verifica status ao digitar (Check-in/Check-out rápido)
         private async void txtInstrumentoID_TextChanged(object sender, EventArgs e)
         {
-            if (txtInstrumentoID.Text.Length > 2)
+            if (txtInstrumentoID.Text.Length > 1) // Começa a verificar com 2 caracteres
             {
-                var s = await ApiService.VerFerr(txtInstrumentoID.Text);
-                if (s.Encontrada)
+                try
                 {
-                    if (string.IsNullOrEmpty(s.MecanicoAtual))
+                    // Chama API para ver se a ferramenta existe e quem está com ela
+                    var s = await ApiService.VerFerr(txtInstrumentoID.Text);
+
+                    if (s.Encontrada)
                     {
-                        lblStatusFerramenta.Text = "DISPONÍVEL";
-                        lblStatusFerramenta.ForeColor = Color.Green;
-                        // Habilita campos de saída
-                        cmbMecanicos.Enabled = true;
-                        txtAeronave.Enabled = true;
+                        if (string.IsNullOrEmpty(s.MecanicoAtual))
+                        {
+                            // Ferramenta está na prateleira -> Pode SAIR
+                            lblStatusFerramenta.Text = "DISPONÍVEL";
+                            lblStatusFerramenta.ForeColor = Color.Green;
+
+                            cmbMecanicos.Enabled = true;
+                            txtAeronave.Enabled = true;
+                            btnCheckOut.Enabled = true;  // Habilita SAÍDA
+                            btnCheckIn.Enabled = false; // Desabilita DEVOLUÇÃO
+                        }
+                        else
+                        {
+                            // Ferramenta está com alguém -> Pode DEVOLVER
+                            lblStatusFerramenta.Text = "EM USO POR: " + s.MecanicoAtual;
+                            lblStatusFerramenta.ForeColor = Color.Red;
+
+                            cmbMecanicos.Enabled = false; // Não precisa selecionar mecânico na devolução
+                            txtAeronave.Enabled = false;
+                            btnCheckOut.Enabled = false; // Desabilita SAÍDA
+                            btnCheckIn.Enabled = true;  // Habilita DEVOLUÇÃO
+                        }
                     }
                     else
                     {
-                        lblStatusFerramenta.Text = "COM " + s.MecanicoAtual;
-                        lblStatusFerramenta.ForeColor = Color.Red;
-                        // Bloqueia campos pois é devolução
-                        cmbMecanicos.Enabled = false;
-                        txtAeronave.Enabled = false;
+                        lblStatusFerramenta.Text = "NÃO ENCONTRADA";
+                        lblStatusFerramenta.ForeColor = Color.Gray;
+                        btnCheckOut.Enabled = false;
+                        btnCheckIn.Enabled = false;
                     }
                 }
-                else
+                catch
                 {
-                    lblStatusFerramenta.Text = "NÃO ENCONTRADA";
-                    lblStatusFerramenta.ForeColor = Color.Gray;
+                    lblStatusFerramenta.Text = "..."; // Erro de conexão ou ID inválido
                 }
             }
         }
 
-        private void btnCheckOut_Click(object sender, EventArgs e) { Mover("PEGAR"); }
-        private void btnCheckIn_Click(object sender, EventArgs e) { Mover("DEVOLVER"); }
+        private void btnCheckOut_Click(object sender, EventArgs e) { Mover("SAÍDA"); }
+        private void btnCheckIn_Click(object sender, EventArgs e) { Mover("DEVOLUÇÃO"); }
 
         private async void Mover(string tipo)
         {
-            string idFerramenta = txtInstrumentoID.Text;
-            string aeronave = txtAeronave.Text;
-            string idMecanico = "";
-            string nomeMecanico = "";
+            string idFerramenta = txtInstrumentoID.Text.Trim();
+            string aeronave = txtAeronave.Text.Trim();
+            string idMecanico = "0";
+            string nomeMecanico = "SISTEMA"; // Valor padrão para devolução
 
-            if (tipo == "PEGAR")
+            if (string.IsNullOrWhiteSpace(idFerramenta))
             {
-                if (cmbMecanicos.SelectedIndex == -1) { MessageBox.Show("Selecione um mecânico."); return; }
-                if (string.IsNullOrWhiteSpace(aeronave)) { MessageBox.Show("Digite o prefixo da Aeronave."); return; }
-
-                // Pega os dados do mecânico selecionado na lista
-                var mecSelecionado = listaMecanicos[cmbMecanicos.SelectedIndex];
-                idMecanico = mecSelecionado.MecanicoID;
-                nomeMecanico = mecSelecionado.Nome;
+                MessageBox.Show("Informe o ID ou Código da ferramenta.");
+                return;
             }
 
-            // Envia tudo para a API
-            string res = await ApiService.RegMov(tipo, idFerramenta, idMecanico, nomeMecanico, aeronave, usuarioLogado);
+            // Validações específicas para SAÍDA
+            if (tipo == "SAÍDA")
+            {
+                if (cmbMecanicos.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Selecione um mecânico.");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(aeronave))
+                {
+                    MessageBox.Show("Digite o prefixo da Aeronave.");
+                    return;
+                }
 
-            if (res == "OK")
-            {
-                MessageBox.Show("Sucesso!");
-                txtInstrumentoID.Clear();
-                txtAeronave.Clear();
-                lblStatusFerramenta.Text = "...";
-                txtInstrumentoID.Focus();
+                // Pega dados do mecânico
+                if (listaMecanicos != null && cmbMecanicos.SelectedIndex < listaMecanicos.Count)
+                {
+                    var mec = listaMecanicos[cmbMecanicos.SelectedIndex];
+                    idMecanico = mec.MecanicoID;
+                    nomeMecanico = mec.Nome;
+                }
             }
-            else
+            else // DEVOLUÇÃO
             {
-                MessageBox.Show(res);
+                // Na devolução, podemos mandar "DEVOLUÇÃO" como aeronave para ficar claro no histórico
+                aeronave = "DEVOLUÇÃO";
+            }
+
+            try
+            {
+                // Chama a API unificada que faz tudo (Atualiza Status + Cria Histórico)
+                string res = await ApiService.RegMov(tipo, idFerramenta, idMecanico, nomeMecanico, aeronave, usuarioLogado);
+
+                if (res == "OK")
+                {
+                    // Feedback visual
+                    string msg = (tipo == "SAÍDA") ?
+                        $"✅ Empréstimo registrado para {nomeMecanico}!" :
+                        "✅ Devolução registrada com sucesso!";
+
+                    MessageBox.Show(msg, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Limpa para o próximo item (fluxo rápido)
+                    txtInstrumentoID.Clear();
+                    txtAeronave.Clear();
+                    lblStatusFerramenta.Text = "AGUARDANDO LEITURA...";
+                    lblStatusFerramenta.ForeColor = Color.Black;
+
+                    // Reseta botões
+                    btnCheckOut.Enabled = false;
+                    btnCheckIn.Enabled = false;
+                    cmbMecanicos.Enabled = true;
+                    txtAeronave.Enabled = true;
+
+                    txtInstrumentoID.Focus(); // Volta o foco para ler o próximo código de barras
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao registrar: " + res, "Erro API", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro de conexão: " + ex.Message, "Erro Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void btnFechar_Click(object sender, EventArgs e) { Close(); }
     }
 }
